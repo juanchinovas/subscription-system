@@ -9,7 +9,7 @@ declare type DbConfig = {
     pass: string;
 };
 
-type MongooseModelType<T> = ReturnType< typeof model<Schema<T>> >;
+export type MongooseModelType<T> = ReturnType< typeof model<Schema<T>> >;
 
 export abstract class MongooseDataHandler<T> implements IDataHandler<T> {
     protected isConnected = false;

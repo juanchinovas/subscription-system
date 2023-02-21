@@ -1,1 +1,6 @@
 node_modules/
+.env
+**/config/docker-*.yml
+**/config/production-*.yml
+yarn-error.log
+dist

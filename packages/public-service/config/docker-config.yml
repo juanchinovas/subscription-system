@@ -1,6 +1,0 @@
-default:
-    server:
-        port: 3001
-    subscriptionservice:
-        host: "subscriptionservice"
-        port: 3000

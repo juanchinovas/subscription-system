@@ -10,7 +10,6 @@ describe("subscriptionController", () => {
     let controller: SubscriptionController;
 
     before(() => {
-        // @ts-ignore
         Sinon.replace(Subscription, 'fromObject', Sinon.fake.returns({} as Subscription));
         subscriptionManager = Sinon.createStubInstance(SubscriptionManager);
         controller = new SubscriptionController(subscriptionManager);

@@ -10,7 +10,7 @@ export function createSubscriptionRouter(controller: SubscriptionController) {
             const result = await controller.getAll(req);
             res.json(result);
         } catch (error) {
-            res.status(400).json(Result.fail(getErrorMessageOrError(error)));
+            res.status(400).json(buildErrorResponse(error as Error));
         }
     });
 
@@ -22,7 +22,7 @@ export function createSubscriptionRouter(controller: SubscriptionController) {
             }
             res.json(result);
         } catch (error) {
-            res.status(400).json(Result.fail(getErrorMessageOrError(error)));
+            res.status(400).json(buildErrorResponse(error as Error));
         }
     });
 
@@ -31,7 +31,7 @@ export function createSubscriptionRouter(controller: SubscriptionController) {
             const result = await controller.getDetails(req);
             res.json(result);
         } catch (error) {
-            res.status(400).json(Result.fail(getErrorMessageOrError(error)));
+            res.status(400).json(buildErrorResponse(error as Error));
         }
     });
 
@@ -40,7 +40,7 @@ export function createSubscriptionRouter(controller: SubscriptionController) {
             const result = await controller.cancel(req);
             res.json(result);
         } catch (error) {
-            res.status(400).json(Result.fail(getErrorMessageOrError(error)));
+            res.status(400).json(buildErrorResponse(error as Error));
         }
     });
 
@@ -48,12 +48,15 @@ export function createSubscriptionRouter(controller: SubscriptionController) {
         res.status(404).json(Result.fail(404, "Not found"));
     })
 
-    function getErrorMessageOrError(error: unknown) {
-        if (error instanceof Error && !(error instanceof CustomError)) {
-            return error.message;
+    function buildErrorResponse(error: Error) {
+        if (error instanceof CustomError) {
+            if ((error as any).responseBody) {
+                return Result.fail((error as any).responseBody);
+            }
+            return Result.fail(error);
         }
 
-        return error;
+        return Result.fail(error.message);
     }
 
     return ["/api/subscriptions", router] as [string, express.Router];

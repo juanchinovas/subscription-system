@@ -4,7 +4,7 @@ default:
         tries: 5
     mqmanager:
         host: "localhost"
-        port: 5672
+        port: 5673
         queue: "campaign-subscription-queue"
         user: "mquser"
         pass: "mqpass"

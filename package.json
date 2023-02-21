@@ -5,8 +5,9 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "test": "npm run test --workspaces",
-    "build": "npm run build --workspaces"
+    "test": "yarn workspaces run test",
+    "build": "yarn workspaces run build",
+    "lint": "yarn workspaces run lint"
   },
   "keywords": [],
   "author": "",

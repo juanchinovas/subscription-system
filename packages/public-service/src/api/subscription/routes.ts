@@ -10,51 +10,54 @@ export function createSubscriptionRouter(controller: SubscriptionController) {
             const result = await controller.getAll(req);
             res.json(result);
         } catch (error) {
-            res.status(400).json(Result.fail(getErrorMessageOrError(error)));
+            res.status(400).json(buildErrorResponse(error as Error));
         }
     });
 
-    // router.post("/", async (req, res) => {
-    //     try {
-    //         const result = await controller.create(req);
-    //         if (result.code >= 200 && result.code < 600) {
-    //             res.status(result.code);
-    //         }
-    //         res.json(result);
-    //     } catch (error) {
-    //         res.status(400).json(Result.fail(getErrorMessageOrError(error)));
-    //     }
-    // });
+    router.post("/", async (req, res) => {
+        try {
+            const result = await controller.create(req);
+            if (result.code >= 200 && result.code < 600) {
+                res.status(result.code);
+            }
+            res.json(result);
+        } catch (error) {
+            res.status(400).json(buildErrorResponse(error as Error));
+        }
+    });
 
-    // router.get("/:id", async (req, res) => {
-    //     try {
-    //         const result = await controller.getDetails(req);
-    //         res.json(result);
-    //     } catch (error) {
-    //         res.status(400).json(Result.fail(getErrorMessageOrError(error)));
-    //     }
-    // });
+    router.get("/:id", async (req, res) => {
+        try {
+            const result = await controller.getDetails(req);
+            res.json(result);
+        } catch (error) {
+            res.status(400).json(buildErrorResponse(error as Error));
+        }
+    });
 
-    // router.delete("/:id", async (req, res) => {
-    //     try {
-    //         const result = await controller.cancel(req);
-    //         res.json(result);
-    //     } catch (error) {
-    //         res.status(400).json(Result.fail(getErrorMessageOrError(error)));
-    //     }
-    // });
-
-    // router.use((_, res) => {
-    //     res.status(404).json(Result.fail(404, "Not found"));
-    // })
-
-    function getErrorMessageOrError(error: unknown) {
-        if (error instanceof Error && !(error instanceof CustomError)) {
-            return error.message;
+    router.delete("/:id", async (req, res) => {
+        try {
+            const result = await controller.cancel(req);
+            res.json(result);
+        } catch (error) {
+            res.status(400).json(buildErrorResponse(error as Error));
+        }
+    });
+    
+    function buildErrorResponse(error: Error) {
+        if (error instanceof CustomError) {
+            if ((error as any).responseBody) {
+                return Result.fail((error as any).responseBody);
+            }
+            return Result.fail(error);
         }
 
-        return error;
+        if ((error.cause as any)?.code ==="ECONNREFUSED") {
+            return Result.fail({message: "Unable to process the request, try later"});
+        }
+
+        return Result.fail({message: error.message});
     }
 
-    return ["/v1/subscriptions", router] as [string, express.Router];
+    return ["/api/v1/subscriptions", router] as [string, express.Router];
 }

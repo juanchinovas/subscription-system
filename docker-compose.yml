@@ -5,49 +5,73 @@ services:
   mongodb:
     container_name: mongdb
     image: mongo
-    restart: always
+    restart: unless-stopped
     volumes:
       - /home/jnovas/dker_mongo_data:/data/db
     environment:
       - "MONGO_INITDB_ROOT_USERNAME=mongoadmin"
       - "MONGO_INITDB_ROOT_PASSWORD=dev_pass"
+    networks:
+      - backend_net
 
   subscriptionrabbit:
     image: rabbitmq:3-management
     container_name: subscriptionrabbit
-    restart: always
+    restart: unless-stopped
     ports:
       - "15672:15672"
     environment:
-      - "RABBITMQ_DEFAULT_USER: mquser"
-      - "RABBITMQ_DEFAULT_PASS: mqpas"
+      - "RABBITMQ_DEFAULT_USER=mquser"
+      - "RABBITMQ_DEFAULT_PASS=mqpass"
+    networks:
+      - backend_net
 
   emailservice:
-    container_name: emailer-service
+    container_name: emailservice
     image: email-service
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./packages/email-service/Dockerfile
     depends_on:
       - subscriptionrabbit
+    networks:
+      - backend_net
 
   subscriptionservice:
     container_name: subscriptionservice
     image: subscription-service
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./packages/subscription-service/Dockerfile
     depends_on:
       - subscriptionrabbit
       - mongodb
+    networks:
+      - backend_net
+    links:
+      - subscriptionrabbit
+      - mongodb
 
   publicservice:
-    container_name: frontservice
+    container_name: publicservice
     image: public-service
     build:
       context: .
       dockerfile: ./packages/public-service/Dockerfile
     ports:
-      - 3001:3001
+      - 3003:3003
     depends_on:
       - subscriptionservice
+    links:
+      - subscriptionservice
+    networks:
+      - backend_net
+      - frontend_net
+
+networks:
+  backend_net:
+    driver: bridge
+  frontend_net:
+    driver: bridge

@@ -1,34 +1,34 @@
-import { IDataHandler, ConfigProvider, Subscription } from "@internal/common";
+import { ConfigProvider } from "@internal/common";
 import express from "express";
 import { SubscriptionController } from "./src/api/subscription/controller";
-import { createSubscriptionRouter } from "./src/api/subscription/routes";
 import mongoose from "mongoose";
-import { ServiceRequestManager } from "./src/ServiceRequestManager";
+import { ServiceRequestManager } from "./src/service/ServiceRequestManager";
 import { SubscriptionService } from "./src/service/SubscriptionService";
 import { YmlConfigFileReader } from "./src/YmlConfigFileReader";
+import { createSwaggerDocsMiddleware, createMiscMiddleware, createSubscriptionRouter } from "./src/api";
 
-import swaggerUi from 'swagger-ui-express';
-// @ts-ignore
-import swaggerDocument from '../swagger.json';
 
 
 const configProvider = new ConfigProvider(new YmlConfigFileReader());
-const app = express()
-const port = process.env.PORT ?? configProvider.readPrimitive("server.port", Number);
+const app = express();
+app.use(express.json());
 
 const serviceRequestManager = new ServiceRequestManager(configProvider);
 const subscriptionService = new SubscriptionService(serviceRequestManager);
 const subscriptionController = new SubscriptionController(subscriptionService);
 
-const [rootPath, router] = createSubscriptionRouter(subscriptionController);
 
-app.use(express.json())
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// Log access Url
 app.use((req, _, next) => {
   console.log(`${req.method} ${req.url}`);
   next();
 });
-app.use(rootPath, router);
+const port = Number(process.env.PORT ?? configProvider.readPrimitive("server.port", Number));
+createSwaggerDocsMiddleware(app, port ?? 80);
+const [apiPath, router] = createSubscriptionRouter(subscriptionController);
+app.use(apiPath, router);
+createMiscMiddleware(app);
+
 
 const server = app.listen(port, () => {
   console.log(`subscription service listening on port ${port}`)

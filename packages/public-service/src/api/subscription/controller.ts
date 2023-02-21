@@ -5,35 +5,27 @@ import { SubscriptionService } from "../../service/SubscriptionService";
 export class SubscriptionController {
     constructor(private subscriptionService: SubscriptionService) {}
 
-    // async create(req: Request): Promise<Result<Subscription>> {
-    //     const subscription = Subscription.fromObject(req.body);
-    //     const subsResult = await this.subscriptionManager.createSubscription(subscription);
+    async create(req: Request): Promise<Result<Subscription>> {
+        const subscription = Subscription.fromObject(req.body);
+        return this.subscriptionService.create(subscription);
+    }
 
-    //     return Result.success(201, subsResult);
-    // }
+    async cancel(req: Request): Promise<Result<boolean>> {
+        const {content: subscrition} = await this.getDetails(req);
+        return this.subscriptionService.cancel(subscrition?.id as string);
+    }
 
-    // async cancel(req: Request): Promise<Result<boolean>> {
-    //     const {content: subscrition} = await this.getDetails(req);
-    //     const result = await this.subscriptionManager.cancelSubscription(subscrition!);
+    async getDetails(req: Request): Promise<Result<Subscription>> {
+        const id = req.params.id;
+        if (!id || typeof id === "boolean") {
+            throw new CustomError("Should provide a valid subscription id");
+        }
 
-    //     return Result.success(result); 
-    // }
-
-    // async getDetails(req: Request): Promise<Result<Subscription>> {
-    //     const id = req.params.id;
-    //     if (!id || typeof id === "boolean") {
-    //         throw new CustomError("Should provide a valid subscription id");
-    //     }
-
-    //     const results = await this.subscriptionManager.getSubscriptionDetails(id);
-
-    //     return Result.success(results)
-    // }
+        return await this.subscriptionService.getById(id);
+    }
 
     async getAll(req: Request): Promise<Result<Subscription[]>>  {
         const {canceled} = req.query;
-        return Result.success(
-            await this.subscriptionService.getAll(canceled === "true")
-        );
+        return this.subscriptionService.getAll(canceled === "true");
     }
 }

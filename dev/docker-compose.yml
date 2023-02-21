@@ -1,0 +1,26 @@
+---
+version: "3"
+
+services:
+  mongodb:
+    container_name: mongdb_dev
+    image: mongo
+    restart: unless-stopped
+    ports:
+      - "27018:27017"
+    volumes:
+      - /home/jnovas/dker_mongo_dev:/data/db
+    environment:
+      - "MONGO_INITDB_ROOT_USERNAME=mongoadmin"
+      - "MONGO_INITDB_ROOT_PASSWORD=dev_pass"
+
+  subscriptionrabbit:
+    image: rabbitmq:3-management
+    container_name: subscriptionrabbit_dev
+    restart: unless-stopped
+    ports:
+      - "15673:15672"
+      - "5673:5672"
+    environment:
+      - "RABBITMQ_DEFAULT_USER=mquser"
+      - "RABBITMQ_DEFAULT_PASS=mqpas"

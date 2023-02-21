@@ -6,7 +6,7 @@ export class YmlConfigFileReader extends ConfigLoader {
 
     load(): Record<string, unknown> {
         const env = process.env.NODE_ENV ?? 'development';
-        const rootPath = `${__dirname}/../..`;
+        const rootPath = `${__dirname}/../../..`;
         return ymlLoad(path.join(rootPath,`/config/${env}-config.yml`), env);
     }
 }

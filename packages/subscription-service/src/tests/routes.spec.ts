@@ -1,107 +1,108 @@
 import { expect } from "chai";
-import express from "express";
+import express, {Express} from "express";
 import supertest from "supertest";
 import Sinon from "sinon";
 import { SubscriptionController } from "../api/subscription/controller";
 import { createSubscriptionRouter } from "../api/subscription/routes";
 import { Result, Subscription } from "@internal/common";
 
-describe("routes - createSubscriptionRouter", () => {
-    const controllerMock = Sinon.createStubInstance(SubscriptionController);
-    Sinon.replace(express, 'Router', Sinon.fake.returns(express.Router()));
+describe("routes - createApiMiddleware", () => {
+    let controllerMock: Sinon.SinonStubbedInstance<SubscriptionController>;
+
+    function createApiMiddleware(controllerMock: SubscriptionController, app?: Express, ) {
+        if (app) {
+            const [apiPath, router] = createSubscriptionRouter(controllerMock);
+            app.use(apiPath, router);
+        }
+
+        return createSubscriptionRouter(controllerMock);
+    }
+
+    beforeEach(() => {
+        Sinon.replace(express, 'Router', Sinon.fake.returns(express.Router()));
+        controllerMock = Sinon.createStubInstance(SubscriptionController);
+    });
+
+    afterEach(() => {
+        Sinon.restore();
+    })
 
     it("returns subscription api router", () => {
-        const routesCreator = createSubscriptionRouter(controllerMock);
+        const routesCreator = createApiMiddleware(controllerMock);
         expect(routesCreator).to.not.be.undefined;
     });
 
     it("returns root path", () => {
-        const [rootPath] = createSubscriptionRouter(controllerMock);
-        expect(rootPath).to.be.include("/subscriptions");
+        const [rootPath] = createApiMiddleware(controllerMock);
+        expect(rootPath).to.be.equals("/api/subscriptions");
     });
 
     it("returns http 404 when url does not match a path in /subscriptions route", (done) => {
-        const [rootPath, router] = createSubscriptionRouter(controllerMock);
-        const app = express()
-        app.use(rootPath, router);
+        const app = express();
+        createApiMiddleware(controllerMock, app);
 
         supertest(app)
-        .post(`${rootPath}/random/path`)
+        .post(`/api/subscriptions/random/path`)
         .expect(404, { success: false, content: 'Not found', code: 404 }, done);
     });
 
-    describe("[GET /subscriptions]", () => {
+    describe("[GET api/subscriptions]", () => {
         it("gets subscription list", (done) => {
-            const controller = Object.create({
-                getAll: Sinon.fake.resolves(Result.success([{}]))
-            }) as SubscriptionController;
-            const [rootPath, router] = createSubscriptionRouter(controller);
+            controllerMock.getAll.resolves(Result.success([{}] as Subscription[]));
             const app = express()
-            app.use(rootPath, router);
+            createApiMiddleware(controllerMock, app);
 
             supertest(app)
-            .get(`${rootPath}`)
+            .get(`/api/subscriptions`)
             .expect(200, {success: true, content: [{}]}, done);
         });
 
         it("returns a http error code plus body info when somthing is wrong", (done) => {
-            const controller = Object.create({
-                getAll: Sinon.fake.rejects(new Error("Oops"))
-            }) as SubscriptionController;
-            const [rootPath, router] = createSubscriptionRouter(controller);
-            const app = express()
-            app.use(rootPath, router);
+            controllerMock.getAll.rejects(new Error("Oops"));
+            const app = express();
+            createApiMiddleware(controllerMock, app);
 
             supertest(app)
-            .get(`${rootPath}`)
+            .get(`/api/subscriptions`)
             .expect(400, {success: false, content: "Oops"}, done);
         });
     });
 
-    describe("[POST /subscriptions]", () => {
+    describe("[POST api/subscriptions]", () => {
         it("creates subscription correctly", (done) => {
-            const controller = Object.create({
-                create: Sinon.fake.resolves(Result.success(201, {id: 1}))
-            }) as SubscriptionController;
-            const [rootPath, router] = createSubscriptionRouter(controller);
+            controllerMock.create.resolves(Result.success(201, {id: 1} as unknown as Subscription));
             const app = express()
-            app.use(rootPath, router);
+            createApiMiddleware(controllerMock, app);
 
             supertest(app)
-            .post(`${rootPath}`)
+            .post(`/api/subscriptions`)
             .send({})
             .expect(201, {success: true, content: {id: 1}, code: 201}, done);
         });
 
         it("creates subscription and return operation code", (done) => {
-            const controller = Object.create({
-                create: Sinon.fake.resolves(Result.success(5, {id: 1}))
-            }) as SubscriptionController;
-            const [rootPath, router] = createSubscriptionRouter(controller);
+            controllerMock.create.resolves(Result.success(5, {id: 1} as unknown as Subscription));
             const app = express()
-            app.use(rootPath, router);
+           createApiMiddleware(controllerMock, app);
 
             supertest(app)
-            .post(`${rootPath}`)
+            .post(`/api/subscriptions`)
             .send({})
             .expect(200, {success: true, code: 5, content: {id: 1}}, done);
         });
 
         it("returns a http error code plus body info when somthing is wrong", (done) => {
-            const controller = Object.create({
-                create: Sinon.fake.rejects(new Error("Oops"))
-            }) as SubscriptionController;
-            const [rootPath, router] = createSubscriptionRouter(controller);
+            controllerMock.create.rejects(new Error("Oops"));
             const app = express()
-            app.use(rootPath, router);
+            createApiMiddleware(controllerMock, app);
 
             supertest(app)
-            .post(`${rootPath}`)
+            .post(`/api/subscriptions`)
             .expect(400, {success: false, content: "Oops"}, done);
         });
     });
 
-    describe("[GET /subscriptions/:id]", () => {
+    describe("[GET api/subscriptions/:id]", () => {
         it("gets subscription details", (done) => {
             const subsDetails = {
                 ...Subscription.fromObject({
@@ -114,15 +115,12 @@ describe("routes - createSubscriptionRouter", () => {
                 }),
                 id: 1,
             };
-            const controller = Object.create({
-                getDetails: Sinon.fake.resolves(Result.success(subsDetails))
-            }) as SubscriptionController;
-            const [rootPath, router] = createSubscriptionRouter(controller);
-            const app = express()
-            app.use(rootPath, router);
+            controllerMock.getDetails.resolves(Result.success(subsDetails  as unknown as Subscription));
+            const app = express();
+            createApiMiddleware(controllerMock, app);
 
             supertest(app)
-            .get(`${rootPath}/1`)
+            .get(`/api/subscriptions/1`)
             .expect(200, {
                 success: true,
                 content: Object.assign(subsDetails, {dateOfBirth: (subsDetails.dateOfBirth as Date)?.toISOString()})
@@ -130,20 +128,17 @@ describe("routes - createSubscriptionRouter", () => {
         });
 
         it("returns a http error code plus body info when somthing is wrong", (done) => {
-            const controller = Object.create({
-                getDetails: Sinon.fake.rejects(new Error("Oops"))
-            }) as SubscriptionController;
-            const [rootPath, router] = createSubscriptionRouter(controller);
-            const app = express()
-            app.use(rootPath, router);
+            controllerMock.getDetails.rejects(new Error("Oops"));
+            const app = express();
+            createApiMiddleware(controllerMock, app);
 
             supertest(app)
-            .get(`${rootPath}/1`)
+            .get(`/api/subscriptions/1`)
             .expect(400, {success: false, content: "Oops"}, done);
         });
     });
 
-    describe("[GET /subscriptions/:id]", () => {
+    describe("[GET api/subscriptions/:id]", () => {
         it("gets subscription details", (done) => {
             const subsDetails = {
                 ...Subscription.fromObject({
@@ -156,15 +151,12 @@ describe("routes - createSubscriptionRouter", () => {
                 }),
                 id: 1,
             };
-            const controller = Object.create({
-                getDetails: Sinon.fake.resolves(Result.success(subsDetails))
-            }) as SubscriptionController;
-            const [rootPath, router] = createSubscriptionRouter(controller);
-            const app = express()
-            app.use(rootPath, router);
+            controllerMock.getDetails.resolves(Result.success(subsDetails as unknown as Subscription));
+            const app = express();
+            createApiMiddleware(controllerMock, app);
 
             supertest(app)
-            .get(`${rootPath}/1`)
+            .get(`/api/subscriptions/1`)
             .expect(200, {
                 success: true,
                 content: Object.assign(subsDetails, {dateOfBirth: (subsDetails.dateOfBirth as Date)?.toISOString()})
@@ -172,30 +164,24 @@ describe("routes - createSubscriptionRouter", () => {
         });
 
         it("returns a http error code plus body info when somthing is wrong", (done) => {
-            const controller = Object.create({
-                getDetails: Sinon.fake.rejects(new Error("Oops"))
-            }) as SubscriptionController;
-            const [rootPath, router] = createSubscriptionRouter(controller);
-            const app = express()
-            app.use(rootPath, router);
+            controllerMock.getDetails.rejects(new Error("Oops"));
+            const app = express();
+            createApiMiddleware(controllerMock, app);
 
             supertest(app)
-            .get(`${rootPath}/1`)
+            .get(`/api/subscriptions/1`)
             .expect(400, {success: false, content: "Oops"}, done);
         });
     });
 
-    describe("[DELETE /subscriptions/:id]", () => {
+    describe("[DELETE api/subscriptions/:id]", () => {
         it("cancels subscription correctly", (done) => {
-            const controller = Object.create({
-                cancel: Sinon.fake.resolves(Result.success(true))
-            }) as SubscriptionController;
-            const [rootPath, router] = createSubscriptionRouter(controller);
+            controllerMock.cancel.resolves(Result.success(true));
             const app = express()
-            app.use(rootPath, router);
+            createApiMiddleware(controllerMock, app);
 
             supertest(app)
-            .delete(`${rootPath}/1`)
+            .delete(`/api/subscriptions/1`)
             .expect(200, {
                 success: true,
                 content: true
@@ -203,15 +189,12 @@ describe("routes - createSubscriptionRouter", () => {
         });
 
         it("returns content false if the subscription could not be cancel", (done) => {
-            const controller = Object.create({
-                cancel: Sinon.fake.resolves(Result.success(false))
-            }) as SubscriptionController;
-            const [rootPath, router] = createSubscriptionRouter(controller);
+            controllerMock.cancel.resolves(Result.success(false));
             const app = express()
-            app.use(rootPath, router);
+            createApiMiddleware(controllerMock, app);
 
             supertest(app)
-            .delete(`${rootPath}/1`)
+            .delete(`/api/subscriptions/1`)
             .expect(200, {
                 success: true,
                 content: false
@@ -219,15 +202,12 @@ describe("routes - createSubscriptionRouter", () => {
         });
 
         it("returns a http error code plus body info when somthing is wrong", (done) => {
-            const controller = Object.create({
-                cancel: Sinon.fake.rejects(new Error("Oops"))
-            }) as SubscriptionController;
-            const [rootPath, router] = createSubscriptionRouter(controller);
+            controllerMock.cancel.rejects(new Error("Oops"));
             const app = express()
-            app.use(rootPath, router);
+            createApiMiddleware(controllerMock, app);
 
             supertest(app)
-            .delete(`${rootPath}/1`)
+            .delete(`/api/subscriptions/1`)
             .expect(400, {success: false, content: "Oops"}, done);
         });
     });

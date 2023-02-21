@@ -3,13 +3,13 @@ default:
         port: 3000
     database:
         host: "localhost"
-        port: 27017
+        port: 27018
         db: "subscriptions_db"
         user: "mongoadmin"
         pass: "dev_pass"
     mqmanager:
         host: "localhost"
-        port: 5672
+        port: 5673
         queue: "campaign-subscription-queue"
         user: "mquser"
         pass: "mqpass"

@@ -7,7 +7,7 @@
     },
     "servers": [
       {
-        "url": "{protocol}://localhost:3001/v1",
+        "url": "{protocol}://localhost:3001/api/v1",
         "variables": {
           "protocol": {
             "enum": [

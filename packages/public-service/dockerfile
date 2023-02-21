@@ -46,6 +46,7 @@ COPY --from=builder /usr/src/packages/common/dist ./packages/common/dist/
 COPY --from=builder /usr/src/packages/common/package.json ./packages/common/
 COPY --from=builder /usr/src/packages/public-service/dist ./dist/
 COPY --from=builder /usr/src/packages/public-service/package.json .
+COPY --from=builder /usr/src/packages/public-service/swagger.json .
 COPY --from=builder /usr/src/packages/public-service/config/docker-config.yml ./config/docker-config.yml
 
 ENV NODE_ENV=docker

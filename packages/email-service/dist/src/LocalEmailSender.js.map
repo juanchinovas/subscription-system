@@ -1,1 +1,0 @@
-{"version":3,"file":"LocalEmailSender.js","sourceRoot":"","sources":["../../src/LocalEmailSender.ts"],"names":[],"mappings":";;;AAEA,MAAa,gBAAgB;IAEzB,KAAK,CAAC,IAAI,CAAC,OAAsB;QAC7B,OAAO,CAAC,GAAG,CAAC,oBAAoB,OAAO,CAAC,MAAM,EAAE,CAAC,CAAC;QAClD,OAAO,CAAC,GAAG,CAAC,OAAO,CAAC,OAAO,CAAC,CAAC;IACjC,CAAC;CACJ;AAND,4CAMC"}

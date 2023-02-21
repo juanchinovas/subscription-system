@@ -10,8 +10,8 @@ import mongoose from "mongoose";
 import { YmlConfigFileReader } from "./src/managers/YmlConfigFileReader";
 
 const configProvider = new ConfigProvider(new YmlConfigFileReader());
-const app = express()
-const port = process.env.PORT ?? configProvider.readPrimitive("server.port", Number);
+const app = express();
+app.use(express.json());
 
 const dataHandler: IDataHandler<Subscription> = new SubscriptionDataHandler(configProvider);
 const chacheManager = new InMemoryCacheManager(configProvider);
@@ -19,15 +19,14 @@ const queueManager = new QueueManager(configProvider);
 const subscriptionManager = new SubscriptionManager(dataHandler, chacheManager, queueManager);
 const subscriptionController = new SubscriptionController(subscriptionManager);
 
-const [rootPath, router] = createSubscriptionRouter(subscriptionController);
-
-app.use(express.json());
 app.use((req, _, next) => {
   console.log(`${req.method} ${req.url}`);
   next();
 });
-app.use(rootPath, router);
+const [apiPath, router] = createSubscriptionRouter(subscriptionController);
+app.use(apiPath, router);
 
+const port = process.env.PORT ?? configProvider.readPrimitive("server.port", Number);
 const server = app.listen(port, () => {
   console.log(`subscription service listening on port ${port}`)
 });
