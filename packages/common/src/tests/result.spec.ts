@@ -1,0 +1,77 @@
+import { expect } from "chai";
+import { Result } from "../..";
+
+describe("Result", () => {
+    describe("fail", () => {
+        it("should create a fail Result correctly", () => {
+            const failResult = Result.fail(400, "Something went wrong");
+            expect(failResult).instanceOf(Result);
+            expect(failResult).to.be.deep.equal({
+                success: false,
+                content: "Something went wrong",
+                code: 400
+            });
+        });
+    
+        it("should create a fail Result correctly with only content", () => {
+            const failResult = Result.fail("Something went wrong");
+            expect(failResult).to.be.deep.equal({
+                success: false,
+                content: "Something went wrong"
+            });
+        });
+        
+        it("should create a fail Result correctly with only code", () => {
+            const failResult = Result.fail(401);
+            expect(failResult).to.be.deep.equal({
+                success: false,
+                code: 401
+            });
+        });
+        
+        it("should create a fail Result correctly with not param", () => {
+            const failResult = Result.fail();
+            expect(failResult).to.be.deep.equal({
+                success: false,
+                code: 400
+            });
+        });
+    });
+
+    describe("success", () => {
+        it("should create a success Result correctly", () => {
+            const successResult = Result.success(4, "Ok");
+            expect(successResult).to.be.deep.equal({
+                success: true,
+                content: "Ok",
+                code: 4
+            });
+        });
+
+        it("should create a success Result correctly with only content", () => {
+            const successResult = Result.success("Ok");
+            expect(successResult).to.be.deep.equal({
+                success: true,
+                content: "Ok"
+            });
+        });
+        
+        it("should create a success Result correctly with only code", () => {
+            const successResult = Result.success(200);
+            expect(successResult).instanceOf(Result);
+            expect(successResult).to.be.deep.equal({
+                success: true,
+                code: 200
+            });
+        });
+
+        
+        it("should create a success Result correctly with not param", () => {
+            const failResult = Result.success();
+            expect(failResult).to.be.deep.equal({
+                success: true,
+                code: 200
+            });
+        });
+    });
+});

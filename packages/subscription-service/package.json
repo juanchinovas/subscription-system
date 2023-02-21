@@ -1,0 +1,41 @@
+{
+  "name": "subscription-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/src/index.js",
+  "scripts": {
+    "start": "NODE_ENV=development node ./dist/index.js",
+    "start:docker": "NODE_ENV=docker node ./dist/index.js",
+    "build": "npm run clean && tsc",
+    "clean": "rimraf -rf ./dist",
+    "lint": "eslint .",
+    "test": "mocha -r ts-node/register 'src/tests/**/*.spec.ts'",
+    "dev": "nodemon --config nodemon.json --exec \"npm run build && npm start\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@internal/common": "^1.0.0",
+    "amqplib": "^0.10.3",
+    "express": "^4.18.2",
+    "mongoose": "^6.9.2",
+    "node-cache": "^5.1.2",
+    "node-yaml-config": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/amqplib": "^0.10.1",
+    "@types/chai": "^4.3.4",
+    "@types/mocha": "^10.0.1",
+    "@types/mongoose": "^5.11.97",
+    "@types/nodemon": "^1.19.2",
+    "@types/sinon": "^10.0.13",
+    "@types/supertest": "^2.0.12",
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0",
+    "nodemon": "^2.0.20",
+    "sinon": "^15.0.1",
+    "supertest": "^6.3.3",
+    "ts-node": "^10.9.1"
+  }
+}

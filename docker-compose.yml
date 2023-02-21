@@ -1,0 +1,53 @@
+---
+version: "3"
+
+services:
+  mongodb:
+    container_name: mongdb
+    image: mongo
+    restart: always
+    volumes:
+      - /home/jnovas/dker_mongo_data:/data/db
+    environment:
+      - "MONGO_INITDB_ROOT_USERNAME=mongoadmin"
+      - "MONGO_INITDB_ROOT_PASSWORD=dev_pass"
+
+  subscriptionrabbit:
+    image: rabbitmq:3-management
+    container_name: subscriptionrabbit
+    restart: always
+    ports:
+      - "15672:15672"
+    environment:
+      - "RABBITMQ_DEFAULT_USER: mquser"
+      - "RABBITMQ_DEFAULT_PASS: mqpas"
+
+  emailservice:
+    container_name: emailer-service
+    image: email-service
+    build:
+      context: .
+      dockerfile: ./packages/email-service/Dockerfile
+    depends_on:
+      - subscriptionrabbit
+
+  subscriptionservice:
+    container_name: subscriptionservice
+    image: subscription-service
+    build:
+      context: .
+      dockerfile: ./packages/subscription-service/Dockerfile
+    depends_on:
+      - subscriptionrabbit
+      - mongodb
+
+  publicservice:
+    container_name: frontservice
+    image: public-service
+    build:
+      context: .
+      dockerfile: ./packages/public-service/Dockerfile
+    ports:
+      - 3001:3001
+    depends_on:
+      - subscriptionservice

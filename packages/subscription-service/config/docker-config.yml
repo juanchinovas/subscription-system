@@ -1,0 +1,17 @@
+default:
+    server:
+        port: 3000
+    database:
+        host: "mongodb"
+        port: 27017
+        db: "subscriptions_db"
+        user: "mongoadmin"
+        pass: "dev_pass"
+    mqmanager:
+        host: "subscriptionrabbit"
+        port: 5672
+        queue: "campaign-subscription-queue"
+        user: "mquser"
+        pass: "mqpass"
+    cacheprovider:
+        ttl: 3600

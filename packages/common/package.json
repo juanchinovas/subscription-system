@@ -1,0 +1,27 @@
+{
+  "name": "@internal/common",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "npm run clean && tsc",
+    "clean": "rimraf -rf ./dist",
+    "lint": "eslint .",
+    "test": "mocha -r ts-node/register 'src/tests/**/*.spec.ts'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/chai": "^4.3.4",
+    "@types/mocha": "^10.0.1",
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0",
+    "ts-node": "^10.9.1",
+    "@types/sinon": "^10.0.13",
+    "sinon": "^15.0.1"
+  },
+  "dependencies": {
+    "zod": "^3.20.6"
+  }
+}
