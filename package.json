@@ -1,13 +1,14 @@
 {
   "name": "subscription_system",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "private": true,
   "main": "index.js",
   "scripts": {
     "test": "yarn workspaces run test",
     "build": "yarn workspaces run build",
-    "lint": "yarn workspaces run lint"
+    "lint": "yarn workspaces run lint",
+    "build:dev": "cd dev && docker compose up -d && cd .. && yarn && yarn build"
   },
   "keywords": [],
   "author": "",
