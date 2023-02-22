@@ -1,6 +1,6 @@
 # Subscription System
 
-![CI/CD Process](https://github.com/juanchinovas/subscription-system/actions/workflows/main.yml/badge.svg)
+![CI/CD Process](https://github.com/juanchinovas/subscription-system/actions/workflows/main.yml/badge.svg?branch=main)
 
 Monorepo for Subscription emulator system
 

@@ -30,15 +30,15 @@ jobs:
 
     - name: yarn build
       run: |
-        yarn build --if-present
+        yarn build
 
     - name: yarn lint
       run: |
-        yarn lint --if-present
+        yarn lint
 
     - name: yarn test
       run: |
-        yarn test --if-present
+        yarn test
 
     # - name: Upload artifact for deployment job
     #   uses: actions/upload-artifact@v3

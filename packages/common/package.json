@@ -4,7 +4,7 @@
   "description": "",
   "main": "./dist/index.js",
   "scripts": {
-    "build": "npm run clean && tsc",
+    "build": "yarn run clean && tsc",
     "clean": "rimraf -rf ./dist",
     "lint": "eslint .",
     "test": "mocha -r ts-node/register 'src/tests/**/*.spec.ts'"

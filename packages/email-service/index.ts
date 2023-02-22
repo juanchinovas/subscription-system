@@ -23,13 +23,13 @@ setTimeout(async () => {
             console.log(`Trying ... ${i+1}/${retries}`);
             exception = e;
         }
-        console.log(exception)
+        logger.log(exception)
     }
 }, 100);
 
 
 process.on('SIGTERM', () => {
-    console.info('SIGTERM signal received.');
-    console.log('Stopping mq server listening.');
+    logger.log('SIGTERM signal received.');
+    logger.log('Stopping mq server listening.');
     queueConsumer.stop()
 });
