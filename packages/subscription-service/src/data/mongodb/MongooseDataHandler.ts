@@ -1,4 +1,4 @@
-import { CustomError, IConfigProvider, IDataHandler } from "@internal/common";
+import { CustomError, IConfigProvider, IDataHandler, ILogger } from "@internal/common";
 import { connect, Schema, model } from "mongoose";
 
 declare type DbConfig = {
@@ -17,7 +17,8 @@ export abstract class MongooseDataHandler<T> implements IDataHandler<T> {
 
     constructor(
         private config: IConfigProvider,
-        protected MongooseModel: MongooseModelType<T>
+        protected MongooseModel: MongooseModelType<T>,
+        private logger: ILogger
     ) {}
 
     async add(t: T): Promise<T> {
@@ -55,7 +56,7 @@ export abstract class MongooseDataHandler<T> implements IDataHandler<T> {
             }
         );
         this.isConnected = Boolean(connection.readyState === 1);
-        console.log("mongodb connected ", this.isConnected);
+        this.logger.log(`mongodb connected ${this.isConnected}`);
     }
 
     protected assertIsConnected() {

@@ -1,5 +1,5 @@
 import { Channel, Connection, connect } from "amqplib";
-import { IConfigProvider, IEnqueue, Subscription } from "@internal/common";
+import { IConfigProvider, IEnqueue, ILogger, Subscription } from "@internal/common";
 
 declare type QueueConfig = {
     host: string;
@@ -12,7 +12,7 @@ declare type QueueConfig = {
 export class QueueManager implements IEnqueue<Subscription> {
     #queueConfig: QueueConfig;
 
-    constructor(private configProvider: IConfigProvider) {}
+    constructor(private configProvider: IConfigProvider, private logger: ILogger) {}
 
     async enqueue(suscription: Subscription): Promise<boolean> {
         const [connection, channel] = (await this.connectQueue()) ?? [];
@@ -40,11 +40,11 @@ export class QueueManager implements IEnqueue<Subscription> {
             const connection = await connect(`amqp://${this.#queueConfig.user}:${this.#queueConfig.pass}@${this.#queueConfig.host}:${this.#queueConfig.port}`);
             const channel    = await connection.createChannel()
             await channel.assertQueue(this.#queueConfig.queue);
-            console.log("Rabbit connected true");
+            this.logger.log("Rabbit connected true");
             return [connection, channel] as [Connection, Channel];
             
         } catch (error) {
-            console.log("Unable to stablish connection with mq server", error)
+            this.logger.error({ message: "Unable to stablish connection with mq server", error })
         }
     }
 

@@ -1,12 +1,13 @@
-import { ConfigProvider } from "@internal/common";
+import { ConfigProvider, ConsoleLogger, ILogger } from "@internal/common";
 import { EmailManager } from "./src/EmailManager";
 import { LocalEmailSender } from "./src/LocalEmailSender";
 import { QueueConsumer } from "./src/QueueConsumer";
 import { YmlConfigFileReader } from "./src/YmlConfigFileReader";
 
+const logger: ILogger = new ConsoleLogger();
 const configProvider = new ConfigProvider(new YmlConfigFileReader());
 const emailManager = new EmailManager(new LocalEmailSender());
-const queueConsumer = new QueueConsumer(configProvider);
+const queueConsumer = new QueueConsumer(configProvider, logger);
 
 queueConsumer.registerObserver(emailManager);
 

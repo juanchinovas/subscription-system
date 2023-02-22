@@ -1,4 +1,4 @@
-import { IDataHandler, ConfigProvider, Subscription } from "@internal/common";
+import { IDataHandler, ConfigProvider, Subscription, ConsoleLogger, ILogger } from "@internal/common";
 import express from "express";
 import { SubscriptionController } from "./src/api/subscription/controller";
 import { createSubscriptionRouter } from "./src/api/subscription/routes";
@@ -13,9 +13,10 @@ const configProvider = new ConfigProvider(new YmlConfigFileReader());
 const app = express();
 app.use(express.json());
 
-const dataHandler: IDataHandler<Subscription> = new SubscriptionDataHandler(configProvider);
+const logger: ILogger = new ConsoleLogger();
+const dataHandler: IDataHandler<Subscription> = new SubscriptionDataHandler(configProvider, logger);
 const chacheManager = new InMemoryCacheManager(configProvider);
-const queueManager = new QueueManager(configProvider);
+const queueManager = new QueueManager(configProvider, logger);
 const subscriptionManager = new SubscriptionManager(dataHandler, chacheManager, queueManager);
 const subscriptionController = new SubscriptionController(subscriptionManager);
 

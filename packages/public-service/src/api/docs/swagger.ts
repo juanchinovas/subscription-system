@@ -1,5 +1,6 @@
 import { Express } from 'express';
 import swaggerUi from 'swagger-ui-express';
+import ip from 'ip';
 // @ts-ignore
 import swaggerDocument from '../../../swagger.json';
 
@@ -14,8 +15,6 @@ export function createSwaggerDocsMiddleware(app: Express, port: number) {
 }
 
 function getCurrentIpAddress() {
-    const ip = require('ip');
     const ipAddress = ip.address();
-
     return ip.isPrivate(ipAddress) ? "localhost" : ipAddress
 }

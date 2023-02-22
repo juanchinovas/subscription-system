@@ -1,4 +1,4 @@
-import { IConfigProvider, Subscription } from "@internal/common";
+import { ConsoleLogger, IConfigProvider, Subscription } from "@internal/common";
 import { expect } from "chai";
 import mongoose from "mongoose";
 import Sinon from "sinon";
@@ -11,6 +11,7 @@ describe("SubscriptionDataHandler", () => {
     let dataHandler : SubscriptionDataHandler;
     let configProvider: Partial<IConfigProvider>;
     let MockedModel: MongooseModelType<Subscription>;
+    let logger: Sinon.SinonStubbedInstance<ConsoleLogger>;
 
     function doMockModel() {
         const mockModelApi = {
@@ -36,6 +37,7 @@ describe("SubscriptionDataHandler", () => {
     }
 
     beforeEach(() => {
+        logger = Sinon.createStubInstance(ConsoleLogger)
         configProvider = {
             read: Sinon.stub().returns({})
         };
@@ -48,7 +50,7 @@ describe("SubscriptionDataHandler", () => {
         Sinon.replace(allModels, "SubscriptionModel", MockedModel);
         
 
-        dataHandler = new SubscriptionDataHandler(configProvider as IConfigProvider);
+        dataHandler = new SubscriptionDataHandler(configProvider as IConfigProvider, logger);
     });
 
     afterEach(() => {
@@ -64,7 +66,7 @@ describe("SubscriptionDataHandler", () => {
         // @ts-ignore
         sandbox.replace(allModels, "SubscriptionModel", doMockModel());
         
-        return new SubscriptionDataHandler(configProvider as IConfigProvider).getAll()
+        return new SubscriptionDataHandler(configProvider as IConfigProvider, logger).getAll()
         .then(() => Promise.reject(new Error("Oops everything was Ok")))
         .catch(error => {
             sandbox.restore();

@@ -9,7 +9,6 @@ import { YmlConfigFileReader } from "./src/YmlConfigFileReader";
 import { createSwaggerDocsMiddleware, createMiscMiddleware, createSubscriptionRouter } from "./src/api";
 
 
-
 const configProvider = new ConfigProvider(new YmlConfigFileReader());
 const app = express();
 app.use(express.json());

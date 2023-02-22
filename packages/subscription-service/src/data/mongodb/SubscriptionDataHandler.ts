@@ -1,11 +1,11 @@
-import { IConfigProvider, Subscription } from "@internal/common";
+import { IConfigProvider, ILogger, Subscription } from "@internal/common";
 import { MongooseDataHandler } from "./MongooseDataHandler";
 import { SubscriptionModel } from "./schema";
 
 export class SubscriptionDataHandler extends MongooseDataHandler<Subscription> {
 
-    constructor(config: IConfigProvider) {
-        super(config, SubscriptionModel);
+    constructor(config: IConfigProvider, logger: ILogger) {
+        super(config, SubscriptionModel, logger);
         this.connect().catch(console.log);
     }
 

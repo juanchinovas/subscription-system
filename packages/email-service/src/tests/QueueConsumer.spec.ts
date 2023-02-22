@@ -1,6 +1,7 @@
 import { expect } from "chai";
 import Sinon from "sinon";
 import { QueueConsumer } from "../QueueConsumer";
+import { ConsoleLogger } from "@internal/common";
 
 
 describe("QueueConsumer", () => {
@@ -10,8 +11,10 @@ describe("QueueConsumer", () => {
     const queueName = "test";
     let mockConnection: any;
     let mockChannel: any;
+    let logger: Sinon.SinonStubbedInstance<ConsoleLogger>;
 
     beforeEach(() => {
+        logger = Sinon.createStubInstance(ConsoleLogger);
         configReader = {
             read: Sinon.fake.returns({queue: queueName})
         };
@@ -26,7 +29,7 @@ describe("QueueConsumer", () => {
             ack: Sinon.fake(),
             close: Sinon.fake()
         };
-        queueConsumer = new QueueConsumer(configReader);
+        queueConsumer = new QueueConsumer(configReader, logger);
 
         // mocking call to private methods to jump mq connection
         // @ts-ignore
@@ -89,5 +92,18 @@ describe("QueueConsumer", () => {
             })
         });
         expect(mockChannel.ack.calledOnce).to.be.true;
+    });
+
+    it("should log an error if reading a message fail", async () => {
+        await queueConsumer.consume();
+        const fakeObserver = {notify: Sinon.fake()}
+        queueConsumer.registerObserver(fakeObserver);
+        const observerQueue = consumers.get(queueName);
+
+        observerQueue?.({
+            content: {}
+        });
+        
+        expect(logger.error.calledOnce).to.be.true;
     });
 })

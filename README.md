@@ -96,3 +96,5 @@ subscription data in a database and email notification to confirm process is com
     > Libraries/Framework to run unit testd.
 7. Zod
     > TypeScript-first schema validation with static type inference. I use it to validate the new subscription data before insert it in the database.
+8. ESlint
+    > ESlint statically analyzes your code to quickly find problems. It is built into most text editors and you can run ESLint as part of your continuous integration pipeline. I use it to statically analyze my code and use the best code practices

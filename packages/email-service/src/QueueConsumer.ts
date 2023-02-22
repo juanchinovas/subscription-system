@@ -1,5 +1,5 @@
 import { Channel, Connection, connect, ConsumeMessage } from "amqplib";
-import { CustomError, IConfigProvider, IQueueConsumer, Subscription } from "@internal/common";
+import { CustomError, IConfigProvider, ILogger, IQueueConsumer, Subscription } from "@internal/common";
 import { ISubscriptionNotifier } from "./interfaces/ISubscriptionNotifier";
 import { IObserver } from "./interfaces/IObserver";
 
@@ -17,7 +17,7 @@ export class QueueConsumer implements IQueueConsumer, ISubscriptionNotifier {
     #mqConnetion: Connection | undefined;
     #mqChannel: Channel | undefined;
 
-    constructor(private configProvider: IConfigProvider) {
+    constructor(private configProvider: IConfigProvider, private logger: ILogger) {
         this.#observers = [];
         this.readMQServerConfig();
     }
@@ -52,7 +52,9 @@ export class QueueConsumer implements IQueueConsumer, ISubscriptionNotifier {
                 const subscription = Subscription.fromObject(notificaion);
                 this.notify(subscription);
                 this.#mqChannel?.ack(message as ConsumeMessage);
-            } catch {}
+            } catch (error) {
+                this.logger.error(error);
+            }
         });
     }
 
@@ -73,7 +75,9 @@ export class QueueConsumer implements IQueueConsumer, ISubscriptionNotifier {
             console.log("Rabbit connected true");
             return [connection, channel] as [Connection, Channel];
             
-        } catch {}
+        } catch (error) {
+            this.logger.error(error);
+        }
     }
 
     private readMQServerConfig() {

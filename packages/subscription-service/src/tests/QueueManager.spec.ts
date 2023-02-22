@@ -1,4 +1,4 @@
-import { Subscription } from "@internal/common";
+import { ConsoleLogger, Subscription } from "@internal/common";
 import { expect } from "chai";
 import Sinon from "sinon";
 import {QueueManager} from "../managers/QueueManager";
@@ -10,8 +10,10 @@ describe("QueueManager", () => {
     const queueName = "test";
     let mockConnection: any;
     let mockChannel: any;
+    let logger: Sinon.SinonStubbedInstance<ConsoleLogger>;
 
     beforeEach(() => {
+        logger = Sinon.createStubInstance(ConsoleLogger);
         configReader = {
             read: Sinon.fake.returns({queue: queueName})
         };
@@ -22,7 +24,7 @@ describe("QueueManager", () => {
             sendToQueue: Sinon.stub().returns(true),
             close: Sinon.fake()
         };
-        queueManager = new QueueManager(configReader);
+        queueManager = new QueueManager(configReader, logger);
 
         // mocking call to private methods to jump mq connection
         // @ts-ignore
