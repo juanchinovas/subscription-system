@@ -44,7 +44,7 @@ export class QueueManager implements IEnqueue<Subscription> {
             return [connection, channel] as [Connection, Channel];
             
         } catch (error) {
-            console.log(error)
+            console.log("Unable to stablish connection with mq server", error)
         }
     }
 

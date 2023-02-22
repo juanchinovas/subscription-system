@@ -27,7 +27,6 @@
     "@types/amqplib": "^0.10.1",
     "@types/chai": "^4.3.4",
     "@types/mocha": "^10.0.1",
-    "@types/mongoose": "^5.11.97",
     "@types/nodemon": "^1.19.2",
     "@types/sinon": "^10.0.13",
     "@types/supertest": "^2.0.12",

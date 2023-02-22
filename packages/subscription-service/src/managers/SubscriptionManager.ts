@@ -40,7 +40,8 @@ export class SubscriptionManager {
     async getSubscriptionDetails(subscriptionId: string) {
         const foundSubscription = await this.chache.readThrough(
             `subscription-${subscriptionId}`,
-            () => this.dataHandler.getById(subscriptionId)
+            () => this.dataHandler.getById(subscriptionId),
+            5000
         );
         if(!foundSubscription) {
             throw new CustomError("Subscription not found");

@@ -16,7 +16,7 @@ describe("ConfigProvider", () => {
             ttl: "45"
         };
         configLoader = {
-            load: sinon.fake.resolves(config)
+            load: sinon.fake.returns(config)
         };
         configProvider = new ConfigProvider(configLoader);
     });

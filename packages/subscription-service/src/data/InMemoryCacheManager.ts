@@ -9,19 +9,19 @@ export class InMemoryCacheManager implements ICacheProvider {
     }
 
 
-    async writeThrough<T>(key: string, fallback: () => Promise<T | null>): Promise<T | null> {
+    async writeThrough<T>(key: string, fallback: () => Promise<T | null>, ttl?: number): Promise<T | null> {
         const newData = await fallback();
         if (newData === null || newData === undefined) {
             this.nodeCache.del(key);
             return true as T;
         } else {
-            this.nodeCache.set(key, newData);
+            this.nodeCache.set(key, newData, ttl as number);
         }
 
         return newData as T;
     }
 
-    async readThrough<T>(key: string, fallback: () => Promise<T>): Promise<T> {
+    async readThrough<T>(key: string, fallback: () => Promise<T>, ttl?: number): Promise<T> {
         const cacheData = this.nodeCache.get<T>(key)
         if (cacheData) {
             return cacheData;
@@ -29,7 +29,7 @@ export class InMemoryCacheManager implements ICacheProvider {
 
         const newData = await fallback();
         if (newData) {
-            this.nodeCache.set(key, newData);
+            this.nodeCache.set(key, newData, ttl as number);
         }
         
         return newData as T;

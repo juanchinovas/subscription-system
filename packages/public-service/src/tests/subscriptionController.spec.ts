@@ -99,7 +99,8 @@ describe("Controller", () => {
 
             expect(result).to.be.deep.eq({
                 success: true,
-                content: true
+                content: true,
+                code: undefined
             });
         });
 
@@ -145,7 +146,8 @@ describe("Controller", () => {
 
             expect(result).to.be.deep.eq({
                 success: true,
-                content: [{}]
+                content: [{}],
+                code: undefined
             });
         });
 
@@ -156,7 +158,8 @@ describe("Controller", () => {
             expect(subscriptionService.getAll.calledOnceWith(false)).to.be.true;
             expect(result).to.be.deep.eq({
                 success: true,
-                content: [{}]
+                content: [{}],
+                code: undefined
             });
         });
 
@@ -167,7 +170,8 @@ describe("Controller", () => {
             expect(subscriptionService.getAll.calledOnceWith(true)).to.be.true;
             expect(result).to.be.deep.eq({
                 success: true,
-                content: [{}]
+                content: [{}],
+                code: undefined
             });
         });
 
@@ -217,7 +221,8 @@ describe("Controller", () => {
 
             expect(result).to.be.deep.eq({
                 success: true,
-                content: {}
+                content: {},
+                code: undefined
             });
         });
 
@@ -239,7 +244,8 @@ describe("Controller", () => {
 
             expect(result).to.be.deep.eq({
                 success: true,
-                content: {}
+                content: {},
+                code: undefined
             });
         });
 

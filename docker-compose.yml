@@ -8,7 +8,7 @@ services:
     image: mongo
     restart: unless-stopped
     volumes:
-      - /home/jnovas/dker_mongo_data:/data/db
+      - "${DB_DATA_DIR}:/data/db"
     environment:
       - "MONGO_INITDB_ROOT_USERNAME=${DB_USERNAME}"
       - "MONGO_INITDB_ROOT_PASSWORD=${DB_PASSWORD}"
@@ -29,7 +29,6 @@ services:
       - backend_net
 
   emailservice:
-    env_file: .env
     container_name: emailservice
     image: email-service
     restart: unless-stopped
@@ -42,7 +41,6 @@ services:
       - backend_net
 
   subscriptionservice:
-    env_file: .env
     container_name: subscriptionservice
     image: subscription-service
     restart: unless-stopped
@@ -59,14 +57,14 @@ services:
       - mongodb
 
   publicservice:
-    env_file: .env
     container_name: publicservice
     image: public-service
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./packages/public-service/Dockerfile
     ports:
-      - 3003:3001
+      - 3003:3003
     depends_on:
       - subscriptionservice
     links:

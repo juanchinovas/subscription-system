@@ -2,6 +2,8 @@
 
 Monorepo for Subscription emulator system
 
+![Swagger console](./docs/swagger_page.png)
+
 ## Projects
 
 - **[common](./packages/common)**
@@ -10,12 +12,12 @@ Monorepo for Subscription emulator system
     > Microservice implementing email notifications. No need to implement real email
 send process, you can create a Mock interface.
 - **[public-service](./packages/public-service)**
-    > Backend for Frontend microservice to be used by UI frontend. Services to create, cancel, list subsciptions
+    > Backend for Frontend microservice to be used by UI frontend. Services to create, cancel, list subsciptions.
 - **[subscription-service](./packages/subscription-service)**
     > Microservice implementing subscription logic, including persistence of
 subscription data in a database and email notification to confirm process is completed.
 
-## Project Dependecies
+## Project dependencies
 
 |Program|Version|
 |------|------|
@@ -26,7 +28,18 @@ subscription data in a database and email notification to confirm process is com
 
 ## Run locally on docker
 
-1. Please, install the previous programs
+>   First of all we need to create the `.env` file in the root folder. Example
+
+```env
+    DB_USERNAME=dbnamehere
+    DB_PASSWORD=dbpasshere
+    DB_DATA_DIR=volume_dir
+    MQ_USERNAME=mquserhere
+    MQ_PASSWORD=mqpasshere
+    CACHE_TTL=3600
+```
+
+1. Please, install the project dependencies
 2. Clone the project using with git or download it and unzip it
 3. Run the following command from the root folder
 
@@ -35,15 +48,15 @@ subscription data in a database and email notification to confirm process is com
     ```
 4. Navigate in your browser to 
     > [http://localhost:3003](http://localhost:3003)
-5. User the swagger ui to make request
+5. Use the swagger ui to make request
 
 ## Run locally without docker
 
-1. Please, install the previous programs
+1. Please, install the project dependencies
 2. Clone the project using with git or download it and unzip it
 3. Run the following commands from the root folder
 
-    - In the terminal mgo to dev/ directory and run this command
+    - In the terminal go to dev/ directory and run this command
         ```bash
         docker compose up -d
         ```
@@ -64,7 +77,7 @@ subscription data in a database and email notification to confirm process is com
         ```
 4. Open a tab in the browser and navigate to 
     > [http://localhost:3001](http://localhost:3001)
-5. User the swagger ui to make request
+5. Use the swagger ui to make request
 
 
 ## Library used
@@ -75,7 +88,6 @@ subscription data in a database and email notification to confirm process is com
     > Is a language for application-scale JavaScript, allow me to write code strongly typed and compile error. I use it to develop the services
 3. Nodemon
     > Is a tool that helps develop Node.js based applications by automatically restarting the node application when file changes in the directory are detected. I use it to get instance app refresh while I code and test
-
 4. amqplib
     > A library for making AMQP 0-9-1 clients for Node.JS, and an AMQP 0-9-. I use to to connect to put/consume messages from Rabbit.
 5. Mongoose

@@ -63,8 +63,10 @@ if(newConfig.server.port) {
     newConfig.server.port += 2;
 }
 
+const fileName = `${serviceConfigPath}/${env}-config.yml`;
+
 fs.writeFileSync(
-    `${serviceConfigPath}/${env}1-config.yml`,
+    fileName,
     yamlLib.stringify({default: newConfig}),
     {
         encoding: "utf-8",
@@ -72,4 +74,4 @@ fs.writeFileSync(
     }
 );
 
-console.log("File: ", `${serviceConfigPath}/${env}-config.yml`, "Generated");
+console.log("File: ", fileName, "Generated");

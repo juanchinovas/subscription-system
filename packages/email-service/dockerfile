@@ -33,7 +33,7 @@ RUN rm -r yarn.lock
 
 ENV NODE_ENV=production
 # install prod dependencies
-RUN yarn install --production=true
+RUN yarn install --production
 
 #
 # The prod image.

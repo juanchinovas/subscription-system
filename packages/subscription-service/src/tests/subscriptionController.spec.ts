@@ -123,7 +123,8 @@ describe("subscriptionController", () => {
 
             expect(result).to.be.deep.eq({
                 success: true,
-                content: true
+                content: true,
+                code: undefined
             });
         });
 
@@ -181,7 +182,8 @@ describe("subscriptionController", () => {
 
             expect(result).to.be.deep.eq({
                 success: true,
-                content: {}
+                content: {},
+                code: undefined
             });
         });
 
@@ -262,7 +264,8 @@ describe("subscriptionController", () => {
 
             expect(result).to.be.deep.eq({
                 success: true,
-                content: []
+                content: [],
+                code: undefined
             });
         });
 

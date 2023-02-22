@@ -7,7 +7,7 @@
         "pass": ""
     },
     "subscriptionservice": {
-        "host": "subscriptionservice",
+        "host": "http://subscriptionservice",
         "port": 3002
     },
     "database": {
@@ -15,10 +15,11 @@
         "port": 27017,
         "db": "subscriptions_db",
         "user": "",
-        "pass": ""
+        "pass": "",
+        "timeout": 10000
     },
     "cacheprovider": {
-        "ttl": 3600
+        "ttl": 36000
     },
     "server": {
         "retries": 5

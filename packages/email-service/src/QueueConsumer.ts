@@ -73,9 +73,7 @@ export class QueueConsumer implements IQueueConsumer, ISubscriptionNotifier {
             console.log("Rabbit connected true");
             return [connection, channel] as [Connection, Channel];
             
-        } catch (error) {
-            console.log(error)
-        }
+        } catch {}
     }
 
     private readMQServerConfig() {

@@ -7,6 +7,7 @@ declare type DbConfig = {
     db: string;
     user: string;
     pass: string;
+    timeout: number;
 };
 
 export type MongooseModelType<T> = ReturnType< typeof model<Schema<T>> >;
@@ -50,6 +51,7 @@ export abstract class MongooseDataHandler<T> implements IDataHandler<T> {
             `mongodb://${dbConfigInfo.user}:${dbConfigInfo.pass}@${dbConfigInfo.host}:${dbConfigInfo.port}`,
             { 
                 dbName: dbConfigInfo.db,
+                serverSelectionTimeoutMS: dbConfigInfo.timeout
             }
         );
         this.isConnected = Boolean(connection.readyState === 1);

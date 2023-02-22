@@ -17,7 +17,8 @@ describe("Result", () => {
             const failResult = Result.fail("Something went wrong");
             expect(failResult).to.be.deep.equal({
                 success: false,
-                content: "Something went wrong"
+                content: "Something went wrong",
+                code: undefined
             });
         });
         
@@ -25,7 +26,8 @@ describe("Result", () => {
             const failResult = Result.fail(401);
             expect(failResult).to.be.deep.equal({
                 success: false,
-                code: 401
+                code: 401,
+                content: undefined
             });
         });
         
@@ -33,7 +35,8 @@ describe("Result", () => {
             const failResult = Result.fail();
             expect(failResult).to.be.deep.equal({
                 success: false,
-                code: 400
+                code: 400,
+                content: undefined
             });
         });
     });
@@ -52,7 +55,8 @@ describe("Result", () => {
             const successResult = Result.success("Ok");
             expect(successResult).to.be.deep.equal({
                 success: true,
-                content: "Ok"
+                content: "Ok",
+                code: undefined
             });
         });
         
@@ -61,7 +65,8 @@ describe("Result", () => {
             expect(successResult).instanceOf(Result);
             expect(successResult).to.be.deep.equal({
                 success: true,
-                code: 200
+                code: 200,
+                content: undefined
             });
         });
 
@@ -70,7 +75,8 @@ describe("Result", () => {
             const failResult = Result.success();
             expect(failResult).to.be.deep.equal({
                 success: true,
-                code: 200
+                code: 200,
+                content: undefined
             });
         });
     });

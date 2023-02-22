@@ -1,6 +1,6 @@
 default:
     server:
-        retries: 5
+        retries: 7
     mqmanager:
         host: "localhost"
         port: 5673
