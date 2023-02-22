@@ -1,5 +1,7 @@
 # Subscription System
 
+![CI/CD Process](https://github.com/juanchinovas/subscription-system/actions/workflows/main.yml/badge.svg)
+
 Monorepo for Subscription emulator system
 
 ![Swagger console](./docs/swagger_page.png)
