@@ -9,7 +9,9 @@ export class SubscriptionController {
         const subscription = Subscription.fromObject(req.body);
         const subsResult = await this.subscriptionManager.createSubscription(subscription);
 
-        return Result.success(201, subsResult);
+        return Result.success(201, {
+            id: subsResult.id
+        } as Subscription);
     }
 
     async cancel(req: Request): Promise<Result<boolean>> {

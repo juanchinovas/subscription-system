@@ -3,4 +3,4 @@ node_modules/
 **/config/docker-*.yml
 **/config/production-*.yml
 yarn-error.log
-dist
+dist/

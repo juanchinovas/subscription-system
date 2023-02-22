@@ -11,15 +11,15 @@ const queueConsumer = new QueueConsumer(configProvider);
 queueConsumer.registerObserver(emailManager);
 
 setTimeout(async () => {
-    const tries = configProvider.readPrimitive("server.tries", Number) ?? 5;
+    const retries = configProvider.readPrimitive("server.retries", Number) ?? 5;
     let exception;
-    for (let i = 0; i < tries; i++) {
+    for (let i = 0; i < retries; i++) {
         try {
             await queueConsumer.consume();
             exception = "Services connected to mq server";
             break;
         } catch (e) {
-            console.log(`Trying ... ${i+1}/${tries}`);
+            console.log(`Trying ... ${i+1}/${retries}`);
             exception = e;
         }
         console.log(exception)

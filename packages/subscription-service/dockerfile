@@ -24,6 +24,9 @@ RUN yarn install
 RUN yarn workspace @internal/common build
 RUN yarn workspace subscription-service build
 
+# Create yaml config file for the docker container 
+RUN node scripts/create-config-file-dkr.js email-service docker
+
 # Need to only copy the prod dependencies
 RUN rm -r node_modules
 RUN rm -r yarn.lock
@@ -49,7 +52,5 @@ COPY --from=builder /usr/src/packages/subscription-service/package.json .
 COPY --from=builder /usr/src/packages/subscription-service/config/docker-config.yml ./config/docker-config.yml
 
 ENV NODE_ENV=docker
-
-EXPOSE 3000
 
 CMD [ "yarn", "run", "start:docker" ]

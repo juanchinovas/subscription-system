@@ -1,0 +1,7 @@
+{
+    "database.user": "DB_USERNAME",
+    "database.pass": "DB_PASSWORD",
+    "mqmanager.user": "MQ_USERNAME",
+    "mqmanager.pass": "MQ_PASSWORD",
+    "cacheprovider.ttl": "CACHE_TTL"
+}

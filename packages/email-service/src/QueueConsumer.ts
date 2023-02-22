@@ -47,10 +47,12 @@ export class QueueConsumer implements IQueueConsumer, ISubscriptionNotifier {
         }
         
         this.#mqChannel.consume(this.#queueConfig.queue, (message) => {
-            const notificaion = JSON.parse(message?.content?.toString() as string);
-            const subscription = Subscription.fromObject(notificaion);
-            this.notify(subscription);
-            this.#mqChannel?.ack(message as ConsumeMessage);
+            try {
+                const notificaion = JSON.parse(message?.content?.toString() as string);
+                const subscription = Subscription.fromObject(notificaion);
+                this.notify(subscription);
+                this.#mqChannel?.ack(message as ConsumeMessage);
+            } catch {}
         });
     }
 

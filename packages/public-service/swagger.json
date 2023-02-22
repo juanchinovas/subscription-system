@@ -1,305 +1,406 @@
 {
-    "openapi": "3.0.3",
-    "info": {
-      "title": "Subscription System - OpenAPI 3.0",
-      "description": "Subscription System api. Every time a subscription is created a email is queued using rabbit",
-      "version": "1.0.0"
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Subscription System - OpenAPI 3.0",
+    "description": "Subscription System api. Every time a subscription is created a email is queued using rabbit",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "{protocol}://{host}:{port}/api/v1",
+      "variables": {
+        "protocol": {
+          "enum": [
+            "http",
+            "https"
+          ],
+          "default": "http"
+        }
+      },
+      "description": "Subscription services"
     },
-    "servers": [
-      {
-        "url": "{protocol}://localhost:3001/api/v1",
-        "variables": {
-          "protocol": {
-            "enum": [
-              "http",
-              "https"
-            ],
-            "default": "http"
-          }
-        }
-      }
-    ],
-    "tags": [
-      {
-        "name": "Subscription",
-        "description": "Campaign subscription api",
-        "externalDocs": {
-          "description": "Find out more",
-          "url": "http://swagger.io"
-        }
-      }
-    ],
-    "paths": {
-      "/subscriptions/{subcriptionId}": {
-        "get": {
-          "tags": [
-            "Subscription"
+    {
+      "url": "{protocol}://localhost:{port}/api/v1",
+      "variables": {
+        "port": {
+          "enum": [
+            "3001",
+            "3003"
           ],
-          "summary": "Return subscription details by id",
-          "description": "Return subscription details by id",
-          "operationId": "subscriptionById",
-          "parameters": [
-            {
-              "in": "path",
-              "name": "subcriptionId",
-              "schema": {
-                "type": "string"
-              },
-              "description": "Subscription id",
-              "required": true
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Successful operation",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "allOf": [
-                      {
-                        "$ref": "#/components/schemas/ApiResponse"
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "content": {
-                            "$ref": "#/components/schemas/Subscription"
-                          }
-                        }
-                      }
-                    ]
-                  }
-                }
-              }
-            },
-            "400": {
-              "description": "Invalid ID supplied"
-            }
-          }
+          "default": "3001"
         },
-        "delete": {
-          "tags": [
-            "Subscription"
+        "protocol": {
+          "enum": [
+            "http",
+            "https"
           ],
-          "summary": "Cancel subscription by id",
-          "description": "Cancel subscription by id",
-          "operationId": "cancelSubscription",
-          "parameters": [
-            {
-              "in": "path",
-              "name": "subcriptionId",
-              "schema": {
-                "type": "string"
-              },
-              "description": "Subscription id",
-              "required": true
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Successful operation",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "allOf": [
-                      {
-                        "$ref": "#/components/schemas/ApiResponse"
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "content": {
-                            "type": "boolean"
-                          }
+          "default": "http"
+        }
+      },
+      "description": "Subscription services locally"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Subscription",
+      "description": "Campaign subscription api",
+      "externalDocs": {
+        "description": "Find out more",
+        "url": "http://swagger.io"
+      }
+    }
+  ],
+  "paths": {
+    "/subscriptions/{subcriptionId}": {
+      "get": {
+        "tags": [
+          "Subscription"
+        ],
+        "summary": "Return subscription details by id",
+        "description": "Return subscription details by id",
+        "operationId": "subscriptionById",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "subcriptionId",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Subscription id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "content": {
+                          "$ref": "#/components/schemas/Subscription"
                         }
                       }
-                    ]
-                  }
+                    }
+                  ]
                 }
               }
-            },
-            "400": {
-              "description": "Invalid ID supplied"
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
             }
           }
         }
       },
-      "/subscriptions": {
-        "get": {
-          "tags": [
-            "Subscription"
-          ],
-          "summary": "List all subscription by status",
-          "description": "List all subscription by status",
-          "operationId": "listSubscription",
-          "parameters": [
-            {
-              "in": "query",
-              "name": "canceled",
-              "schema": {
-                "type": "boolean"
-              },
-              "description": "Param to filter thhe subscription by status"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Successful operation",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "allOf": [
-                      {
-                        "$ref": "#/components/schemas/ApiResponse"
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "content": {
-                            "type": "array",
-                            "items": {
-                              "$ref": "#/components/schemas/Subscription"
-                            }
-                          }
-                        }
-                      }
-                    ]
-                  }
-                }
-              }
+      "delete": {
+        "tags": [
+          "Subscription"
+        ],
+        "summary": "Cancel subscription by id",
+        "description": "Cancel subscription by id",
+        "operationId": "cancelSubscription",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "subcriptionId",
+            "schema": {
+              "type": "string"
             },
-            "400": {
-              "description": "Invalid ID supplied"
-            }
+            "description": "Subscription id",
+            "required": true
           }
-        },
-        "post": {
-          "tags": [
-            "Subscription"
-          ],
-          "summary": "Create a new subscription",
-          "description": "Create a new subscription",
-          "operationId": "createSubscription",
-          "requestBody": {
-            "description": "Create a new subscription and notify the user",
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Subscription"
-                }
-              }
-            },
-            "required": true
-          },
-          "responses": {
-            "200": {
-              "description": "Successful operation",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "allOf": [
-                      {
-                        "$ref": "#/components/schemas/ApiResponse"
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "content": {
-                            "$ref": "#/components/schemas/Subscription"
-                          }
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "content": {
+                          "type": "boolean"
                         }
                       }
-                    ]
-                  }
+                    }
+                  ]
                 }
               }
-            },
-            "400": {
-              "description": "Invalid input"
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
             }
           }
         }
       }
     },
-    "components": {
-      "schemas": {
-        "Subscription": {
-          "type": "object",
-          "required": [
-            "email",
-            "consentFlag",
-            "campaignId",
-            "dateOfBirth"
-          ],
-          "properties": {
-            "id": {
-              "type": "string",
-              "format": "int64",
-              "example": "10"
-            },
-            "email": {
-              "type": "string",
-              "format": "string",
-              "example": "test@tes.com"
-            },
-            "firstName": {
-              "type": "string",
-              "format": "string",
-              "example": "Cava"
-            },
-            "consentFlag": {
-              "type": "number",
-              "format": "int64",
-              "example": 1,
-              "enum": [
-                1,
-                0
-              ]
-            },
-            "campaignId": {
-              "type": "number",
-              "format": "int64",
-              "example": 125
-            },
-            "gender": {
-              "type": "string",
-              "format": "string",
-              "example": "M"
-            },
-            "dateOfBirth": {
-              "type": "string",
-              "format": "date"
-            },
-            "status": {
-              "type": "boolean",
-              "description": "Subscription Status",
-              "example": true,
-              "enum": [
-                true,
-                false
-              ]
-            }
-          }
-        },
-        "ApiResponse": {
-          "type": "object",
-          "required": [
-            "success",
-            "content"
-          ],
-          "properties": {
-            "code": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "success": {
+    "/subscriptions": {
+      "get": {
+        "tags": [
+          "Subscription"
+        ],
+        "summary": "List all subscription by status",
+        "description": "List all subscription by status",
+        "operationId": "listSubscription",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "canceled",
+            "schema": {
               "type": "boolean"
             },
+            "description": "Param to filter thhe subscription by status"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
             "content": {
-              "type": "string"
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "content": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Subscription"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Subscription"
+        ],
+        "summary": "Create a new subscription",
+        "description": "Create a new subscription",
+        "operationId": "createSubscription",
+        "requestBody": {
+          "description": "Create a new subscription and notify the user",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubscriptionPost"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "content": {
+                          "$ref": "#/components/schemas/SubscriptionPostResponse"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
             }
           }
         }
       }
     }
+  },
+  "components": {
+    "schemas": {
+      "SubscriptionPostResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "SubscriptionPost": {
+        "type": "object",
+        "required": [
+          "email",
+          "consentFlag",
+          "campaignId",
+          "dateOfBirth"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "string",
+            "example": "test@tes.com"
+          },
+          "firstName": {
+            "type": "string",
+            "format": "string",
+            "example": "Cava"
+          },
+          "consentFlag": {
+            "type": "number",
+            "format": "int64",
+            "example": 1,
+            "enum": [
+              1,
+              0
+            ]
+          },
+          "campaignId": {
+            "type": "number",
+            "format": "int64",
+            "example": 125
+          },
+          "gender": {
+            "type": "string",
+            "format": "string",
+            "example": "M"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "Subscription": {
+        "type": "object",
+        "required": [
+          "email",
+          "consentFlag",
+          "campaignId",
+          "dateOfBirth"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "int64",
+            "example": "10"
+          },
+          "email": {
+            "type": "string",
+            "format": "string",
+            "example": "test@tes.com"
+          },
+          "firstName": {
+            "type": "string",
+            "format": "string",
+            "example": "Cava"
+          },
+          "consentFlag": {
+            "type": "number",
+            "format": "int64",
+            "example": 1,
+            "enum": [
+              1,
+              0
+            ]
+          },
+          "campaignId": {
+            "type": "number",
+            "format": "int64",
+            "example": 125
+          },
+          "gender": {
+            "type": "string",
+            "format": "string",
+            "example": "M"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date"
+          },
+          "status": {
+            "type": "boolean",
+            "description": "Subscription Status",
+            "example": true,
+            "enum": [
+              true,
+              false
+            ]
+          }
+        }
+      },
+      "ApiResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "content"
+        ],
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "success": {
+            "type": "boolean"
+          },
+          "content": {
+            "type": "string"
+          }
+        }
+      }
+    }
   }
+}

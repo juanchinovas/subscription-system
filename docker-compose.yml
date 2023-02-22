@@ -3,30 +3,33 @@ version: "3"
 
 services:
   mongodb:
+    env_file: .env
     container_name: mongdb
     image: mongo
     restart: unless-stopped
     volumes:
       - /home/jnovas/dker_mongo_data:/data/db
     environment:
-      - "MONGO_INITDB_ROOT_USERNAME=mongoadmin"
-      - "MONGO_INITDB_ROOT_PASSWORD=dev_pass"
+      - "MONGO_INITDB_ROOT_USERNAME=${DB_USERNAME}"
+      - "MONGO_INITDB_ROOT_PASSWORD=${DB_PASSWORD}"
     networks:
       - backend_net
 
   subscriptionrabbit:
+    env_file: .env
     image: rabbitmq:3-management
     container_name: subscriptionrabbit
     restart: unless-stopped
     ports:
       - "15672:15672"
     environment:
-      - "RABBITMQ_DEFAULT_USER=mquser"
-      - "RABBITMQ_DEFAULT_PASS=mqpass"
+      - "RABBITMQ_DEFAULT_USER=${MQ_USERNAME}"
+      - "RABBITMQ_DEFAULT_PASS=${MQ_PASSWORD}"
     networks:
       - backend_net
 
   emailservice:
+    env_file: .env
     container_name: emailservice
     image: email-service
     restart: unless-stopped
@@ -39,6 +42,7 @@ services:
       - backend_net
 
   subscriptionservice:
+    env_file: .env
     container_name: subscriptionservice
     image: subscription-service
     restart: unless-stopped
@@ -55,13 +59,14 @@ services:
       - mongodb
 
   publicservice:
+    env_file: .env
     container_name: publicservice
     image: public-service
     build:
       context: .
       dockerfile: ./packages/public-service/Dockerfile
     ports:
-      - 3003:3003
+      - 3003:3001
     depends_on:
       - subscriptionservice
     links:

@@ -20,6 +20,10 @@ describe("subscriptionController", () => {
     });
 
     describe("create", () => {
+        beforeEach(() => {
+            subscriptionManager.createSubscription.resolves({}  as Subscription)
+        });
+
         it("calls createSubscription on the subscription manager", async () => {
             const req = {body: {}} as Request;
             await controller.create(req);
@@ -34,9 +38,9 @@ describe("subscriptionController", () => {
             expect(result).instanceOf(Result<Subscription>);
         });
 
-        it("returns success Result when the subscription is created correctly", async () => {
+        it("returns success Result with the id when the subscription is created correctly", async () => {
             subscriptionManager = Sinon.createStubInstance(SubscriptionManager, {
-                createSubscription: Sinon.stub(Promise.resolve({} as Subscription))
+                createSubscription: Sinon.stub(Promise.resolve({id: 45} as unknown as Subscription))
             });
             controller = new SubscriptionController(subscriptionManager);
             const req = {body: {}} as Request;
@@ -45,7 +49,9 @@ describe("subscriptionController", () => {
             expect(result).to.be.deep.eq({
                 success: true,
                 code: 201,
-                content: {}
+                content: {
+                    id: 45
+                }
             });
         });
 

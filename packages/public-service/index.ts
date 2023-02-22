@@ -1,5 +1,6 @@
 import { ConfigProvider } from "@internal/common";
 import express from "express";
+import cors from "cors";
 import { SubscriptionController } from "./src/api/subscription/controller";
 import mongoose from "mongoose";
 import { ServiceRequestManager } from "./src/service/ServiceRequestManager";
@@ -17,7 +18,10 @@ const serviceRequestManager = new ServiceRequestManager(configProvider);
 const subscriptionService = new SubscriptionService(serviceRequestManager);
 const subscriptionController = new SubscriptionController(subscriptionService);
 
-
+// cors
+app.use(cors({
+  methods: ['GET','POST','DELETE']
+}));
 // Log access Url
 app.use((req, _, next) => {
   console.log(`${req.method} ${req.url}`);
@@ -28,7 +32,6 @@ createSwaggerDocsMiddleware(app, port ?? 80);
 const [apiPath, router] = createSubscriptionRouter(subscriptionController);
 app.use(apiPath, router);
 createMiscMiddleware(app);
-
 
 const server = app.listen(port, () => {
   console.log(`subscription service listening on port ${port}`)
