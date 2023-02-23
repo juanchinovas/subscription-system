@@ -52,6 +52,7 @@ jobs:
         host: ${{ secrets.DGOC_SSH_HOST }}
         key: ${{ secrets.DGOC_SSH_KEY }}
         username: ${{ secrets.DGOC_SSH_USER }}
+        script_stop: true
         script: |
             git clone git@github.com:juanchinovas/subscription-system.git
             cd subscription-system
