@@ -58,12 +58,12 @@ jobs:
         scp: |
           './packages/*' => "/pipeline/subscription-system/packages/"
           './scripts/*' => "/pipeline/subscription-system/scripts/"
-          ./.env => "/pipeline/subscription-system/.env"
-          ./docker-compose.yml => "/pipeline/subscription-system/docker-compose.yml"
-          ./package.json => "/pipeline/subscription-system/package.json"
-          ./yarn.lock => "/pipeline/subscription-system/yarn.lock"
-          ./tsconfig.base.json => "/pipeline/subscription-system/tsconfig.base.json"
-          ./.eslintrc.json => "/pipeline/subscription-system/.eslintrc.json"
+          ./.env => "/pipeline/subscription-system/"
+          ./docker-compose.yml => "/pipeline/subscription-system/"
+          ./package.json => "/pipeline/subscription-system/"
+          ./yarn.lock => "/pipeline/subscription-system/"
+          ./tsconfig.base.json => "/pipeline/subscription-system/"
+          ./.eslintrc.json => "/pipeline/subscription-system/"
         last_ssh: |
           ls -l /pipeline/subscription-system
 

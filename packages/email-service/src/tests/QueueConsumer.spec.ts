@@ -32,8 +32,7 @@ describe("QueueConsumer", () => {
         queueConsumer = new QueueConsumer(configReader, logger);
 
         // mocking call to private methods to jump mq connection
-        // @ts-ignore
-        Sinon.stub(queueConsumer, "connectQueue" as keyof QueueConsumer).callsFake(() => {
+        Sinon.stub(queueConsumer as any, "connectQueue" as keyof QueueConsumer).callsFake(() => {
             // @ts-ignore
             queueConsumer.readMQServerConfig();
             return Promise.resolve([mockConnection, mockChannel])

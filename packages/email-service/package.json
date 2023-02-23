@@ -18,7 +18,6 @@
   "dependencies": {
     "@internal/common": "^1.0.0",
     "amqplib": "^0.10.3",
-    "express": "^4.18.2",
     "node-yaml-config": "^1.0.0"
   },
   "devDependencies": {

@@ -5,6 +5,12 @@
     "rootDir": ".",
     "resolveJsonModule": true
   },
+  "include": [
+    "src/**/*",
+    "swagger.json",
+    "package.json",
+    "*.ts",
+  ],
   "exclude": ["**/*.spec.ts", "**/*.test.ts", "./dist/**/*"],
   "references": [
     {
