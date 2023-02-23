@@ -38,6 +38,10 @@
         }
       },
       "description": "Subscription services locally"
+    },
+    {
+      "url": "https://juanchinovas.dev/api/v1",
+      "description": "Subscription services on prod"
     }
   ],
   "tags": [

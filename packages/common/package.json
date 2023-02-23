@@ -6,6 +6,7 @@
   "scripts": {
     "build": "yarn run clean && tsc",
     "clean": "rimraf -rf ./dist",
+    "pre:docker": "echo 'OK'",
     "lint": "eslint .",
     "test": "mocha -r ts-node/register 'src/tests/**/*.spec.ts'"
   },

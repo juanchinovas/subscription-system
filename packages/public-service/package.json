@@ -6,6 +6,7 @@
   "scripts": {
     "start": "NODE_ENV=development node ./dist/index.js",
     "start:docker": "NODE_ENV=docker node ./dist/index.js",
+    "pre:docker": "node ../../scripts/create-config-file-dkr.js public-service docker",
     "build": "yarn run clean && tsc",
     "clean": "rimraf -rf ./dist",
     "lint": "eslint .",

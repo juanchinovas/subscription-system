@@ -4,6 +4,7 @@ const nodeYml = require("node-yaml-config");
 const configTemplate = require("./templates/config-service.json");
 const configMap = require("./templates/env-key.map.json");
 const fs = require("fs");
+const path = require("path");
 const lodash = require("lodash");
 
 const [service, env] = process.argv.slice(2);
@@ -12,17 +13,17 @@ if (!service || !env) {
     process.exit(1);
 }
 
-const cpw = process.cwd();
-const envs = envLoader.parse(fs.readFileSync(`${cpw}/.env`));
+const cwd = path.join(__dirname, "..");
+const envs = envLoader.parse(fs.readFileSync(`${cwd}/.env`));
 if (!envs) {
     console.log(".env file not found");
     process.exit(1);
 }
 
 console.log("service: ", service, "target env: ", env);
-console.log("cwd: ", process.cwd());
 
-const serviceConfigPath = `${cpw}/packages/${service}/config`;
+const serviceConfigPath = `${cwd}/packages/${service}/config`;
+console.log("looking at...: ", serviceConfigPath);
 const serviceDevConfigFile = nodeYml.load(`${serviceConfigPath}/development-config.yml`);
 const keysNeeded = Object.keys(serviceDevConfigFile);
 console.log("Collection keys ...");

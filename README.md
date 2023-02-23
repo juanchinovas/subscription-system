@@ -43,8 +43,10 @@ subscription data in a database and email notification to confirm process is com
 
 1. Please, install the project dependencies
 2. Clone the project using with git or download it and unzip it
-3. Run the following command from the root folder
-
+3. Run the following commands from the root folder
+    ```bash
+    yarn pre:docker
+    ```
     ```bash
     docker compose up -d
     ```
@@ -69,13 +71,13 @@ subscription data in a database and email notification to confirm process is com
     - Run this in a new tab
     
         ```bash
-        yarn workspace subscription-service
+        yarn workspace subscription-service run dev
         ```
         ```bash
-        yarn workspace public-service
+        yarn workspace public-service run dev
         ```
         ```bash
-        yarn workspace email-service
+        yarn workspace email-service run dev
         ```
 4. Open a tab in the browser and navigate to 
     > [http://localhost:3001](http://localhost:3001)

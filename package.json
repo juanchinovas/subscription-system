@@ -8,6 +8,7 @@
     "test": "yarn workspaces run test",
     "build": "yarn workspaces run build",
     "lint": "yarn workspaces run lint",
+    "pre:docker": "yarn workspaces run pre:docker",
     "build:dev": "cd dev && docker compose up -d && cd .. && yarn && yarn build"
   },
   "keywords": [],

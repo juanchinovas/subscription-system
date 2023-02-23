@@ -8,7 +8,7 @@ export function createSwaggerDocsMiddleware(app: Express, port: number) {
     service.url = service.url.replace("{host}", getCurrentIpAddress()).replace("{port}", port.toString());
 
     swaggerDocument.info.version = process.env.npm_package_version ?? "1.0.0";
-    swaggerDocument.info.description += `. \n\`\`\` (${process.env.NODE_ENV}) v${process.env.npm_package_version}\`\`\``;
+    swaggerDocument.info.description += `. \n\`\`\` (${process.env.DEPLOY_SHA1 ?? process.env.NODE_ENV}) v${process.env.npm_package_version}\`\`\``;
    
     app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 }
