@@ -53,7 +53,7 @@ jobs:
         key: ${{ secrets.DGOC_SSH_KEY }}
         user: ${{ secrets.DGOC_SSH_USER }}
         first_ssh: |
-          mkdir -p /${{ secrets.DGOC_SSH_USER }}/subscription-system
+          mkdir -p "/${{ secrets.DGOC_SSH_USER }}/subscription-system"
         scp: |
           './packages/*' => "/${{ secrets.DGOC_SSH_USER }}/subscription-system/packages/"
           './scripts/*' => "/${{ secrets.DGOC_SSH_USER }}/subscription-system/scripts/"
