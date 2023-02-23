@@ -47,14 +47,24 @@ jobs:
         envkey_CACHE_TTL: '${{ secrets.CACHE_TTL }}'
 
     - name: Uploading files
-      uses: appleboy/ssh-action@master
+      uses: cross-the-world/ssh-scp-ssh-pipelines@latest
       with:
         host: ${{ secrets.DGOC_SSH_HOST }}
         key: ${{ secrets.DGOC_SSH_KEY }}
-        username: ${{ secrets.DGOC_SSH_USER }}
-        source: "packages/,scripts/,.env,docker-compose.yml,package.json,yarn.lock,tsconfig.base.json.eslintrc.json"
-        target: "/home/${{ secrets.DGOC_SSH_USER }}/subscription-system"
-        overwrite: true
+        user: ${{ secrets.DGOC_SSH_USER }}
+        first_ssh: |
+          mkdir -p /${{ secrets.DGOC_SSH_USER }}/subscription-system
+        scp: |
+          './packages/*' => "/${{ secrets.DGOC_SSH_USER }}/subscription-system/packages/"
+          './scripts/*' => "/${{ secrets.DGOC_SSH_USER }}/subscription-system/scripts/"
+          ./.env => "/${{ secrets.DGOC_SSH_USER }}/subscription-system/.env"
+          ./docker-compose.yml => "/${{ secrets.DGOC_SSH_USER }}/subscription-system/docker-compose.yml"
+          ./package.json => "/${{ secrets.DGOC_SSH_USER }}/subscription-system/package.json"
+          ./yarn.lock => "/${{ secrets.DGOC_SSH_USER }}/subscription-system/yarn.lock"
+          ./tsconfig.base.json => "/${{ secrets.DGOC_SSH_USER }}/subscription-system/tsconfig.base.json"
+          ./.eslintrc.json => "/${{ secrets.DGOC_SSH_USER }}/subscription-system/.eslintrc.json"
+        last_ssh: |
+          ls -l /${{ secrets.DGOC_SSH_USER }}/subscription-system
 
     - name: Deploy services
       uses: appleboy/ssh-action@master
