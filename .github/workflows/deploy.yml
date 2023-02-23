@@ -48,7 +48,9 @@ jobs:
         envkey_CACHE_TTL: '${{ secrets.CACHE_TTL }}'
 
     - name: testing
-      run: echo ${{ ENV.SERVER_PATH }}
+      run: |
+        echo ${{ env.SERVER_PATH }} > test
+        cat test
     - name: Uploading files
       uses: cross-the-world/ssh-scp-ssh-pipelines@latest
       with:
