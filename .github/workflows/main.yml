@@ -51,10 +51,6 @@ jobs:
         envkey_MQ_USERNAME: '${{ secrets.MQ_USERNAME }}'
         envkey_MQ_PASSWORD: '${{ secrets.MQ_PASSWORD }}'
         envkey_CACHE_TTL: '${{ secrets.CACHE_TTL }}'
-
-    - name: Get tag
-      id: tag
-      uses: dawidd6/action-get-tag@v1
   
     - name: Log into registry
       uses: docker/login-action@v1
@@ -68,8 +64,8 @@ jobs:
       with:
         push: true
         build-args: |
-          version=${{ steps.tag.outputs.tag }}
-        tags: ${{ secrets.ACR_ENDPOINT }}/${{ env.IMAGE_NAME }}:${{ steps.tag.outputs.tag }}
+          version=${{ $GITHUB_SHA }}
+        tags: ${{ secrets.ACR_ENDPOINT }}/${{ env.IMAGE_NAME }}:${{ $GITHUB_SHA }}
 
     # - name: 'Az CLI login'
     #   uses: azure/login@v1
