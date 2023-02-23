@@ -45,7 +45,16 @@ jobs:
         envkey_MQ_USERNAME: '${{ secrets.MQ_USERNAME }}'
         envkey_MQ_PASSWORD: '${{ secrets.MQ_PASSWORD }}'
         envkey_CACHE_TTL: '${{ secrets.CACHE_TTL }}'
-  
+
+    - name: Uploading files
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.DGOC_SSH_HOST }}
+        key: ${{ secrets.DGOC_SSH_KEY }}
+        username: ${{ secrets.DGOC_SSH_USER }}
+        source: "packages/,scripts/,.env,docker-compose.yml,package.json,yarn.lock,tsconfig.base.json"
+        target: "subscription-system"
+
     - name: Deploy services
       uses: appleboy/ssh-action@master
       with:
@@ -54,7 +63,6 @@ jobs:
         username: ${{ secrets.DGOC_SSH_USER }}
         script_stop: true
         script: |
-            git clone git@github.com:juanchinovas/subscription-system.git
             cd subscription-system
             docker compose up -d
             cd ..
