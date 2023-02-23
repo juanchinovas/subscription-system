@@ -6,6 +6,7 @@ on:
 
 env:
   NODE_VERSION: '18.x'
+  SERVER_PATH: /${{ secrets.DGOC_SSH_USER }}/subscription-system
 
 jobs:
   build:
@@ -47,7 +48,7 @@ jobs:
         envkey_CACHE_TTL: '${{ secrets.CACHE_TTL }}'
 
     - name: testing
-      run: echo /${{ secrets.DGOC_SSH_USER }}/subscription-system
+      run: echo ${{ ENV.SERVER_PATH }}
     - name: Uploading files
       uses: cross-the-world/ssh-scp-ssh-pipelines@latest
       with:
