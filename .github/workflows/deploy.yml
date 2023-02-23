@@ -46,6 +46,8 @@ jobs:
         envkey_MQ_PASSWORD: '${{ secrets.MQ_PASSWORD }}'
         envkey_CACHE_TTL: '${{ secrets.CACHE_TTL }}'
 
+    - name: testing
+      run: echo /${{ secrets.DGOC_SSH_USER }}/subscription-system
     - name: Uploading files
       uses: cross-the-world/ssh-scp-ssh-pipelines@latest
       with:
