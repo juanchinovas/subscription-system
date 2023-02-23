@@ -54,18 +54,18 @@ jobs:
         key: ${{ secrets.DGOC_SSH_KEY }}
         user: ${{ secrets.DGOC_SSH_USER }}
         first_ssh: |
-          mkdir -p "/subscription-system"
+          mkdir -p "/pipeline/subscription-system"
         scp: |
-          './packages/*' => "/subscription-system/packages/"
-          './scripts/*' => "/subscription-system/scripts/"
-          ./.env => "/subscription-system/.env"
-          ./docker-compose.yml => "/subscription-system/docker-compose.yml"
-          ./package.json => "/subscription-system/package.json"
-          ./yarn.lock => "/subscription-system/yarn.lock"
-          ./tsconfig.base.json => "/subscription-system/tsconfig.base.json"
-          ./.eslintrc.json => "/subscription-system/.eslintrc.json"
+          './packages/*' => "/pipeline/subscription-system/packages/"
+          './scripts/*' => "/pipeline/subscription-system/scripts/"
+          ./.env => "/pipeline/subscription-system/.env"
+          ./docker-compose.yml => "/pipeline/subscription-system/docker-compose.yml"
+          ./package.json => "/pipeline/subscription-system/package.json"
+          ./yarn.lock => "/pipeline/subscription-system/yarn.lock"
+          ./tsconfig.base.json => "/pipeline/subscription-system/tsconfig.base.json"
+          ./.eslintrc.json => "/pipeline/subscription-system/.eslintrc.json"
         last_ssh: |
-          ls -l /subscription-system
+          ls -l /pipeline/subscription-system
 
     - name: Deploy services
       uses: appleboy/ssh-action@master
@@ -75,7 +75,7 @@ jobs:
         username: ${{ secrets.DGOC_SSH_USER }}
         script_stop: true
         script: |
-            cd /subscription-system
+            cd /pipeline/subscription-system
             docker compose up -d
             cd ..
-            rm -fr /subscription-system
+            rm -fr /pipeline/subscription-system
