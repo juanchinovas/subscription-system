@@ -52,8 +52,9 @@ jobs:
         host: ${{ secrets.DGOC_SSH_HOST }}
         key: ${{ secrets.DGOC_SSH_KEY }}
         username: ${{ secrets.DGOC_SSH_USER }}
-        source: "packages/,scripts/,.env,docker-compose.yml,package.json,yarn.lock,tsconfig.base.json"
-        target: "subscription-system"
+        source: "packages/,scripts/,.env,docker-compose.yml,package.json,yarn.lock,tsconfig.base.json.eslintrc.json"
+        target: "/home/${{ secrets.DGOC_SSH_USER }}/subscription-system"
+        overwrite: true
 
     - name: Deploy services
       uses: appleboy/ssh-action@master
