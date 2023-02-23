@@ -52,29 +52,32 @@ jobs:
         envkey_MQ_PASSWORD: '${{ secrets.MQ_PASSWORD }}'
         envkey_CACHE_TTL: '${{ secrets.CACHE_TTL }}'
   
-    - name: Log into registry
-      uses: docker/login-action@v1
-      with:
-        registry: ${{ secrets.ACR_ENDPOINT }}
-        username: ${{ secrets.ACR_USERNAME }}
-        password: ${{ secrets.ACR_PASSWORD }}
-
-    - name: Build & Push
-      uses: docker/build-push-action@v2
-      with:
-        push: true
-        tags: ${{ secrets.ACR_ENDPOINT }}/${{ env.IMAGE_NAME }}
-
-    # - name: 'Az CLI login'
-    #   uses: azure/login@v1
+    # - name: Log into registry
+    #   uses: docker/login-action@v1
     #   with:
-    #       creds: '${{ secrets.AZURE_CREDENTIALS }}'
+    #     registry: ${{ secrets.ACR_ENDPOINT }}
+    #     username: ${{ secrets.ACR_USERNAME }}
+    #     password: ${{ secrets.ACR_PASSWORD }}
+
+    # - name: Build & Push
+    #   uses: docker/build-push-action@v2
+    #   with:
+    #     push: true
+    #     tags: ${{ secrets.ACR_ENDPOINT }}/${{ env.IMAGE_NAME }}
+
+    - name: 'Az CLI login'
+      uses: azure/login@v1
+      with:
+          creds: '${{ secrets.AZURE_CREDENTIALS }}'
   
-    # - name: 'Run Azure CLI commands'
-    #   run: |
-    #       az account show
-    #       az group list
-    #       pwd 
+    - name: Azure CLI script
+      uses: azure/CLI@v1
+      with:
+        azcliversion: 2.0.72
+        inlineScript: |
+          az acr login --name ${{ secrets.ACR_USERNAME }}
+          docker-compose up
+          docker-compose push
 
   # deploy:
   #   permissions:
