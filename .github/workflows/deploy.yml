@@ -6,7 +6,7 @@ on:
 
 env:
   NODE_VERSION: '18.x'
-  SERVER_PATH: /${{ secrets.DGOC_SSH_USER }}/subscription-system
+  SERVER_PATH: /subscription-system
 
 jobs:
   build:
@@ -47,11 +47,6 @@ jobs:
         envkey_MQ_PASSWORD: '${{ secrets.MQ_PASSWORD }}'
         envkey_CACHE_TTL: '${{ secrets.CACHE_TTL }}'
 
-    - name: testing
-      run: |
-        echo "${{ env.SERVER_PATH }}" > test
-        cat test
-        cat .env
     - name: Uploading files
       uses: cross-the-world/ssh-scp-ssh-pipelines@latest
       with:
@@ -59,18 +54,18 @@ jobs:
         key: ${{ secrets.DGOC_SSH_KEY }}
         user: ${{ secrets.DGOC_SSH_USER }}
         first_ssh: |
-          mkdir -p "/${{ secrets.DGOC_SSH_USER }}/subscription-system"
+          mkdir -p "/subscription-system"
         scp: |
-          './packages/*' => "/${{ secrets.DGOC_SSH_USER }}/subscription-system/packages/"
-          './scripts/*' => "/${{ secrets.DGOC_SSH_USER }}/subscription-system/scripts/"
-          ./.env => "/${{ secrets.DGOC_SSH_USER }}/subscription-system/.env"
-          ./docker-compose.yml => "/${{ secrets.DGOC_SSH_USER }}/subscription-system/docker-compose.yml"
-          ./package.json => "/${{ secrets.DGOC_SSH_USER }}/subscription-system/package.json"
-          ./yarn.lock => "/${{ secrets.DGOC_SSH_USER }}/subscription-system/yarn.lock"
-          ./tsconfig.base.json => "/${{ secrets.DGOC_SSH_USER }}/subscription-system/tsconfig.base.json"
-          ./.eslintrc.json => "/${{ secrets.DGOC_SSH_USER }}/subscription-system/.eslintrc.json"
+          './packages/*' => "/subscription-system/packages/"
+          './scripts/*' => "/subscription-system/scripts/"
+          ./.env => "/subscription-system/.env"
+          ./docker-compose.yml => "/subscription-system/docker-compose.yml"
+          ./package.json => "/subscription-system/package.json"
+          ./yarn.lock => "/subscription-system/yarn.lock"
+          ./tsconfig.base.json => "/subscription-system/tsconfig.base.json"
+          ./.eslintrc.json => "/subscription-system/.eslintrc.json"
         last_ssh: |
-          ls -l /${{ secrets.DGOC_SSH_USER }}/subscription-system
+          ls -l /subscription-system
 
     - name: Deploy services
       uses: appleboy/ssh-action@master
@@ -80,7 +75,7 @@ jobs:
         username: ${{ secrets.DGOC_SSH_USER }}
         script_stop: true
         script: |
-            cd subscription-system
+            cd /subscription-system
             docker compose up -d
             cd ..
-            rm -fr subscription-system
+            rm -fr /subscription-system
