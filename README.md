@@ -2,7 +2,7 @@
 
 ![CI/CD Process](https://github.com/juanchinovas/subscription-system/actions/workflows/main.yml/badge.svg?branch=main)
 
-Monorepo for Subscription emulator system
+Monorepo for Subscription emulator system. ***See CI/CD Pipeline***  [Here](./CI_CD.md)
 
 ![Swagger console](./docs/swagger_page.png)
 

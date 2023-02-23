@@ -1,0 +1,60 @@
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '18.x'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'yarn'
+
+    - name: yarn install
+      run: |
+        yarn install
+
+    - name: yarn build
+      run: |
+        yarn build
+
+    - name: yarn lint
+      run: |
+        yarn lint
+
+    - name: yarn test
+      run: |
+        yarn test
+    
+    - name: Writing .env file
+      uses: javajawa/create-envfile@v1
+      with:
+        file_name: .env
+        envkey_DB_USERNAME: '${{ secrets.DB_USERNAME }}'
+        envkey_DB_PASSWORD: '${{ secrets.DB_PASSWORD }}'
+        envkey_DB_DATA_DIR: '${{ secrets.DB_DATA_DIR }}'
+        envkey_MQ_USERNAME: '${{ secrets.MQ_USERNAME }}'
+        envkey_MQ_PASSWORD: '${{ secrets.MQ_PASSWORD }}'
+        envkey_CACHE_TTL: '${{ secrets.CACHE_TTL }}'
+  
+    - name: Deploy services
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.DGOC_SSH_HOST }}
+        key: ${{ secrets.DGOC_SSH_KEY }}
+        username: ${{ secrets.DGOC_SSH_USER }}
+        script: |
+            git clone git@github.com:juanchinovas/subscription-system.git
+            cd subscription-system
+            docker compose up -d
+            cd ..
+            rm subscription-system
