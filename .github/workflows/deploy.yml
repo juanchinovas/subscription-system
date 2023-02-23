@@ -49,8 +49,9 @@ jobs:
 
     - name: testing
       run: |
-        echo ${{ env.SERVER_PATH }} > test
+        echo "${{ env.SERVER_PATH }}" > test
         cat test
+        cat .env
     - name: Uploading files
       uses: cross-the-world/ssh-scp-ssh-pipelines@latest
       with:
