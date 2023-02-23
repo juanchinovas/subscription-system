@@ -52,27 +52,60 @@ jobs:
         envkey_MQ_PASSWORD: '${{ secrets.MQ_PASSWORD }}'
         envkey_CACHE_TTL: '${{ secrets.CACHE_TTL }}'
 
+    - name: Compressing the files
+      run: tar -cvf backup.tar pacackes/** script/ .env package.json yarn.lock dockerignore docker-compose.yml .gitignore  .eslintrc.json
 
-    # - name: Upload artifact for deployment job
-    #   uses: actions/upload-artifact@v3
-    #   with:
-    #     name: node-app
-    #     path: .
+    - name: Upload artifact for deployment job
+      uses: actions/upload-artifact@v3
+      with:
+        name: node-app
+        path: backup.tar
+        if-no-files-found: error
+        retention-days: 1
 
-  build-images-and-deploy-to-azure:
+
+
+  creating-images-and-deploy-to-azure:
     runs-on: ubuntu-latest
     needs: build
     steps:
-    - name: 'Az CLI login'
-      uses: azure/login@v1
+    - name: Download artifact for deployment job
+      uses: actions/download-artifact@v3
       with:
-          creds: '${{ secrets.AZURE_CREDENTIALS }}'
+        name: node-app
+        path: .
+
+    - name: Uncompressing the files
+      run: tar -xvf backup.tar -C .
+
+    - name: Get tag
+        id: tag
+        uses: dawidd6/action-get-tag@v1
   
-    - name: 'Run Azure CLI commands'
-      run: |
-          az account show
-          az group list
-          pwd 
+    - name: Log into registry
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ secrets.ACR_ENDPOINT }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+    - name: Build & Push
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          build-args: |
+            version=${{ steps.tag.outputs.tag }}
+          tags: ${{ secrets.ACR_ENDPOINT }}/${{ env.IMAGE_NAME }}:${{ steps.tag.outputs.tag }}
+
+    # - name: 'Az CLI login'
+    #   uses: azure/login@v1
+    #   with:
+    #       creds: '${{ secrets.AZURE_CREDENTIALS }}'
+  
+    # - name: 'Run Azure CLI commands'
+    #   run: |
+    #       az account show
+    #       az group list
+    #       pwd 
 
   # deploy:
   #   permissions:
