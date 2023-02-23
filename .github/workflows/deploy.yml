@@ -1,7 +1,7 @@
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "test_deploy" ]
   workflow_dispatch:
 
 env:
@@ -57,4 +57,4 @@ jobs:
             cd subscription-system
             docker compose up -d
             cd ..
-            rm subscription-system
+            rm -fr subscription-system
