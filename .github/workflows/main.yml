@@ -63,9 +63,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         push: true
-        build-args: |
-          version=${{ $GITHUB_SHA }}
-        tags: ${{ secrets.ACR_ENDPOINT }}/${{ env.IMAGE_NAME }}:${{ $GITHUB_SHA }}
+        tags: ${{ secrets.ACR_ENDPOINT }}/${{ env.IMAGE_NAME }}
 
     # - name: 'Az CLI login'
     #   uses: azure/login@v1
