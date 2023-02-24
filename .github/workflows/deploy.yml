@@ -1,7 +1,7 @@
 
 on:
   push:
-    branches: [ "test_deploy" ]
+    branches: [ "main" ]
   workflow_dispatch:
 
 env:
@@ -78,7 +78,6 @@ jobs:
         script: |
           [[ ! -z $(docker ps -qf "name=service$") ]] && docker stop $(docker ps -qf "name=service$") || echo "No containers found"
           docker container prune -f
-          [[ ! -z $(docker images "*-service" -q) ]] && docker rmi $(docker images "*-service" -q)  || echo "No images found"
     
     - name: Deploy services
       uses: appleboy/ssh-action@master
@@ -91,6 +90,6 @@ jobs:
         command_timeout: "30m"
         script: |
             cd /pipeline/subscription-system
-            docker compose up -d
+            docker compose up --build -d
             cd ..
             rm -fr /pipeline/subscription-system

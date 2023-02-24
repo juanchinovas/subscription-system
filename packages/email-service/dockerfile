@@ -29,7 +29,6 @@ RUN node scripts/create-config-file-dkr.js email-service docker
 
 # Need to only copy the prod dependencies
 RUN rm -r node_modules
-RUN rm -r yarn.lock
 
 ENV NODE_ENV=production
 # install prod dependencies

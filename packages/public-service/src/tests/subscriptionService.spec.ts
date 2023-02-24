@@ -13,19 +13,35 @@ describe("SubscriptionService", () => {
         service = new SubscriptionService(mockServiceRequestManager);
     });
 
-    it("should start a request to /api/subscriptions on the subscription service", () => {
+    it("should start a request to /api/subscriptions on the subscription service to get canceled subscriptions", () => {
         service.getAll(false);
         expect(mockServiceRequestManager.get.calledOnceWith({
             service: "subscriptionservice",
-            path: `/api/subscriptions`
+            path: `/api/subscriptions?canceled=false`
         })).to.be.true;
     });
 
-    it("should start a request to /api/subscriptions on the subscription service to get canceled subscriptions", () => {
+    it("should start a request to /api/subscriptions on the subscription service to get active subscriptions", () => {
         service.getAll(true);
         expect(mockServiceRequestManager.get.calledOnceWith({
             service: "subscriptionservice",
             path: `/api/subscriptions?canceled=true`
+        })).to.be.true;
+    });
+
+    it("should start a request to /api/subscriptions on the subscription service with wrong filter parameter", () => {
+        service.getAll("0");
+        expect(mockServiceRequestManager.get.calledOnceWith({
+            service: "subscriptionservice",
+            path: `/api/subscriptions?canceled=0`
+        })).to.be.true;
+    });
+
+    it("should start a request to /api/subscriptions on the subscription service to get all subscriptions", () => {
+        service.getAll();
+        expect(mockServiceRequestManager.get.calledOnceWith({
+            service: "subscriptionservice",
+            path: `/api/subscriptions`
         })).to.be.true;
     });
 

@@ -269,6 +269,54 @@ describe("subscriptionController", () => {
             });
         });
 
+        it("should calls subscriptionManager.getAll with is canceled false", async () => {
+            subscriptionManager = Sinon.createStubInstance(SubscriptionManager, {
+                getAll: Sinon.stub(Promise.resolve([]))
+            });
+            controller = new SubscriptionController(subscriptionManager);
+
+            const result: Result<Subscription[]> = await controller.getAll({query: {canceled: "false"}} as unknown as Request);
+
+            expect(result).to.be.deep.eq({
+                success: true,
+                content: [],
+                code: undefined
+            });
+            expect(subscriptionManager.getAll.calledOnceWith({ isCanceled: false })).to.be.true;
+        });
+
+        it("should calls subscriptionManager.getAll with is canceled true", async () => {
+            subscriptionManager = Sinon.createStubInstance(SubscriptionManager, {
+                getAll: Sinon.stub(Promise.resolve([]))
+            });
+            controller = new SubscriptionController(subscriptionManager);
+
+            const result: Result<Subscription[]> = await controller.getAll({query: {canceled: "true"}} as unknown as Request);
+
+            expect(result).to.be.deep.eq({
+                success: true,
+                content: [],
+                code: undefined
+            });
+            expect(subscriptionManager.getAll.calledOnceWith({ isCanceled: true })).to.be.true;
+        });
+
+        it("should calls subscriptionManager.getAll with undefined", async () => {
+            subscriptionManager = Sinon.createStubInstance(SubscriptionManager, {
+                getAll: Sinon.stub(Promise.resolve([]))
+            });
+            controller = new SubscriptionController(subscriptionManager);
+
+            const result: Result<Subscription[]> = await controller.getAll({query: {canceled: "45"}} as unknown as Request);
+
+            expect(result).to.be.deep.eq({
+                success: true,
+                content: [],
+                code: undefined
+            });
+            expect(subscriptionManager.getAll.calledOnceWith(undefined)).to.be.true;
+        });
+
         it("throws if subscription manager throws", (done) => {
             const error = new Error("Oops");
             subscriptionManager = sandbox.createStubInstance(SubscriptionManager, {

@@ -33,8 +33,11 @@ export class SubscriptionController {
     }
 
     async getAll(req: Request): Promise<Result<Subscription[]>>  {
-        const {canceled} = req?.query ?? {};
-        const filter = canceled === "true" ? { isCanceled: true } : undefined;
+        const {canceled} = req.query ?? {};
+        let filter = undefined;
+        if (canceled === "true" || canceled === "false") {
+            filter = { isCanceled: Boolean(canceled === "true") };
+        }
 
         return Result.success(
             await this.subscriptionManager.getAll(filter)

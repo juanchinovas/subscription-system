@@ -26,6 +26,6 @@ export class SubscriptionController {
 
     async getAll(req: Request): Promise<Result<Subscription[]>>  {
         const {canceled} = req.query;
-        return this.subscriptionService.getAll(canceled === "true");
+        return this.subscriptionService.getAll(canceled);
     }
 }

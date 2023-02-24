@@ -155,7 +155,7 @@ describe("Controller", () => {
             const req = {query: {canceled: "false"}} as unknown as Request;
             const result: Result<Subscription[]> = await controller.getAll(req);
 
-            expect(subscriptionService.getAll.calledOnceWith(false)).to.be.true;
+            expect(subscriptionService.getAll.calledOnceWith("false")).to.be.true;
             expect(result).to.be.deep.eq({
                 success: true,
                 content: [{}],
@@ -167,7 +167,7 @@ describe("Controller", () => {
             const req = {query: {canceled: "true"}} as unknown as Request;
             const result: Result<Subscription[]> = await controller.getAll(req);
 
-            expect(subscriptionService.getAll.calledOnceWith(true)).to.be.true;
+            expect(subscriptionService.getAll.calledOnceWith("true")).to.be.true;
             expect(result).to.be.deep.eq({
                 success: true,
                 content: [{}],

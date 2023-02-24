@@ -4,6 +4,11 @@
 
 Monorepo for Subscription emulator system. ***See CI/CD Pipeline***  [Here](./CI_CD.md)
 
+## K8s files created
+
+> [See](./k8s/). I JUST CREATED THIS FILES BUT NOT RUNNING. I will do it sometime in the future to lear more about K8s.
+
+Here the services already deployed in DigitalOcean [https://juanchinovas.dev](https://juanchinovas.dev)
 ![Swagger console](./docs/swagger_page.png)
 
 ## Projects

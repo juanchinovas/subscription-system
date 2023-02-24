@@ -4,10 +4,14 @@ import { ServiceRequestManager } from "./ServiceRequestManager";
 export class SubscriptionService {
     constructor(private serviceRequestManager: ServiceRequestManager) {}
 
-    async getAll(canceled: boolean) {
+    async getAll(canceled?: unknown) {
+        let condiction = "";
+        if (canceled !== null && canceled !== undefined) {
+            condiction = `?canceled=${canceled}`;
+        }
         return this.serviceRequestManager.get({
             service: "subscriptionservice",
-            path: `/api/subscriptions${canceled ? "?canceled=true" : ""}`
+            path: `/api/subscriptions${condiction}`
         });
     }
 

@@ -1,0 +1,15 @@
+apiVersion: v1
+data:
+  CACHE_TTL: "36000"
+  DB_DATA_DIR: /home/jnovas/dker_mongo_data
+  DB_PASSWORD: dev_pass
+  DB_USERNAME: mongoadmin
+  MQ_PASSWORD: mqpass
+  MQ_USERNAME: mquser
+  NODE_ENV: development
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: mongodb-env
+  name: env
