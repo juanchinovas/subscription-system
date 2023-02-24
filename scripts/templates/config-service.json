@@ -22,6 +22,6 @@
         "ttl": 36000
     },
     "server": {
-        "retries": 5
+        "retries": 7
     }
 }

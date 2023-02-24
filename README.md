@@ -53,7 +53,7 @@ subscription data in a database and email notification to confirm process is com
     yarn pre:docker
     ```
     ```bash
-    docker compose up -d
+    docker compose up --build -d
     ```
 4. Navigate in your browser to 
     > [http://localhost:3003](http://localhost:3003)

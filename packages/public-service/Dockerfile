@@ -52,6 +52,7 @@ COPY --from=builder /usr/src/packages/public-service/swagger.json .
 COPY --from=builder /usr/src/packages/public-service/config/docker-config.yml ./config/docker-config.yml
 
 ENV NODE_ENV=docker
+ENV DEPLOY_SHA1=$DEPLOY_SHA1
 
 EXPOSE 3003
 

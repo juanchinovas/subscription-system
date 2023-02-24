@@ -86,8 +86,6 @@ jobs:
         key: ${{ secrets.DGOC_SSH_KEY }}
         username: ${{ secrets.DGOC_SSH_USER }}
         script_stop: true
-        timeout: "1m"
-        command_timeout: "30m"
         script: |
             cd /pipeline/subscription-system
             docker compose up --build -d
