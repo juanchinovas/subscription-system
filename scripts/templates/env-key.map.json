@@ -3,5 +3,6 @@
     "database.pass": "DB_PASSWORD",
     "mqmanager.user": "MQ_USERNAME",
     "mqmanager.pass": "MQ_PASSWORD",
-    "cacheprovider.ttl": "CACHE_TTL"
+    "cacheprovider.ttl": "CACHE_TTL",
+    "server.sha1": "DEPLOY_SHA1"
 }

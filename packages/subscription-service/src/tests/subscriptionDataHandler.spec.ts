@@ -39,7 +39,8 @@ describe("SubscriptionDataHandler", () => {
     beforeEach(() => {
         logger = Sinon.createStubInstance(ConsoleLogger)
         configProvider = {
-            read: Sinon.stub().returns({})
+            read: Sinon.stub().returns({}),
+            readPrimitive: Sinon.stub().returns(3)
         };
         // @ts-ignore
         Sinon.replace(mongoose, "connect", Sinon.fake.resolves({ connection: {
@@ -71,8 +72,29 @@ describe("SubscriptionDataHandler", () => {
         .catch(error => {
             sandbox.restore();
             expect(error).to.have.a.property("message", "Connection to db is not stablished");
+            expect(logger.log.called).to.be.true;
         })
-    })
+    });
+
+    it("should retry db connection when is not stablished", () => {
+        const sandbox = Sinon.createSandbox();
+        const connection = {
+            connection: {
+                readyState: 0
+            }
+        };
+        // @ts-ignore
+        sandbox.replace(mongoose, "connect", Sinon.fake.resolves(connection));
+        // @ts-ignore
+        sandbox.replace(allModels, "SubscriptionModel", doMockModel());
+        const dataHandler = new SubscriptionDataHandler(configProvider as IConfigProvider, logger);
+        connection.connection.readyState = 1;
+
+        return dataHandler.getById(2)
+        .then(() => {
+            expect(connection.connection.readyState).to.be.equal(1);
+        });
+    });
 
     describe("getById", () => {
         it("should return subscription by Id", async () => {

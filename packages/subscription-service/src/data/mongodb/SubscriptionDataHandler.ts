@@ -6,7 +6,7 @@ export class SubscriptionDataHandler extends MongooseDataHandler<Subscription> {
 
     constructor(config: IConfigProvider, logger: ILogger) {
         super(config, SubscriptionModel, logger);
-        this.connect().catch(console.log);
+        this.connect().catch(logger.error.bind(logger));
     }
 
     async add(subscription: Subscription): Promise<Subscription> {
@@ -15,7 +15,7 @@ export class SubscriptionDataHandler extends MongooseDataHandler<Subscription> {
     }
     
     async delete(subscription: Subscription): Promise<boolean> {
-        this.assertIsConnected();
+        await this.assertIsConnected();
         const result = await SubscriptionModel.findByIdAndUpdate(
             subscription.id,
             {
@@ -27,7 +27,7 @@ export class SubscriptionDataHandler extends MongooseDataHandler<Subscription> {
     }
     
     async getById(id: unknown): Promise<Subscription> {
-        this.assertIsConnected();
+        await this.assertIsConnected();
         const result = await SubscriptionModel.findOne({
             _id: {$eq: id}
         });

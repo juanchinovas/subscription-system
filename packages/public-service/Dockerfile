@@ -42,6 +42,8 @@ FROM node:18.14-alpine
 
 WORKDIR /app
 
+ARG DEPLOY_SHA1 
+
 # Copy the bundle from the builder image.
 COPY --from=builder /usr/src/node_modules ./node_modules
 COPY --from=builder /usr/src/packages/common/dist ./packages/common/dist/
@@ -52,7 +54,7 @@ COPY --from=builder /usr/src/packages/public-service/swagger.json .
 COPY --from=builder /usr/src/packages/public-service/config/docker-config.yml ./config/docker-config.yml
 
 ENV NODE_ENV=docker
-ENV DEPLOY_SHA1=$DEPLOY_SHA1
+ENV DEPLOY_SHA1=${DEPLOY_SHA1}
 
 EXPOSE 3003
 

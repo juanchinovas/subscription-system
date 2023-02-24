@@ -22,6 +22,7 @@
         "ttl": 36000
     },
     "server": {
-        "retries": 7
+        "retries": 7,
+        "sha1": ""
     }
 }

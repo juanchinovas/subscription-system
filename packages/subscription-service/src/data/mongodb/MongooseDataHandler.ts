@@ -14,21 +14,24 @@ export type MongooseModelType<T> = ReturnType< typeof model<Schema<T>> >;
 
 export abstract class MongooseDataHandler<T> implements IDataHandler<T> {
     protected isConnected = false;
+    private retries = 0;
 
     constructor(
         private config: IConfigProvider,
         protected MongooseModel: MongooseModelType<T>,
         private logger: ILogger
-    ) {}
+    ) {
+        this.retries = config.readPrimitive("server.retries", Number) ?? 2;
+    }
 
     async add(t: T): Promise<T> {
-        this.assertIsConnected();
+        await this.assertIsConnected();
         const newT = new this.MongooseModel(t)
         return (await newT.save()).toJSON() as T;
     }
     
     async getAll(filter?: Partial<Record<keyof T, unknown>> | undefined): Promise<T[]> {
-        this.assertIsConnected();
+        await this.assertIsConnected();
 
         let filterBy = {};
         if (filter) {
@@ -59,10 +62,23 @@ export abstract class MongooseDataHandler<T> implements IDataHandler<T> {
         this.logger.log(`mongodb connected ${this.isConnected}`);
     }
 
-    protected assertIsConnected() {
+    protected async assertIsConnected() {
         if (!this.isConnected) {
+            if (this.retries > 0) {
+                this.retries -= 1;
+                try {
+                    await this.connect();
+                    // Connection stablished
+                    if (this.isConnected) {
+                        return;
+                    }
+                } catch (error) {
+                    this.logger.log({message: `Trying stablish db connection. ${this.retries} tries left`, error})
+                }
+            }
+
             throw new CustomError({
-                message: "Connection to db is not stablished"
+                message: `Connection to db is not stablished`
             })
         }
     }

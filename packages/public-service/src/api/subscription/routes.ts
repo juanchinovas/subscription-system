@@ -46,9 +46,8 @@ export function createSubscriptionRouter(controller: SubscriptionController) {
     
     function buildErrorResponse(error: Error) {
         if (error instanceof CustomError) {
-            console.log(error);
             if ((error as any).responseBody) {
-                return Result.fail((error as any).responseBody);
+                return Result.fail((error as any).responseBody.content ?? (error as any).responseBody);
             }
             return Result.fail(error);
         }

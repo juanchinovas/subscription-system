@@ -27,7 +27,8 @@ app.use((req, _, next) => {
   next();
 });
 const port = Number(process.env.PORT ?? configProvider.readPrimitive("server.port", Number));
-createSwaggerDocsMiddleware(app, port ?? 80);
+const sha1 = configProvider.read("server.sha1") as string;
+createSwaggerDocsMiddleware(app, port ?? 80, sha1);
 const [apiPath, router] = createSubscriptionRouter(subscriptionController);
 app.use(apiPath, router);
 createMiscMiddleware(app);
