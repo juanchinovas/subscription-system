@@ -68,17 +68,6 @@ jobs:
         last_ssh: |
           ls -l /pipeline/subscription-system
     
-    - name: Stop and remove the previous images/containers
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.DGOC_SSH_HOST }}
-        key: ${{ secrets.DGOC_SSH_KEY }}
-        username: ${{ secrets.DGOC_SSH_USER }}
-        script_stop: true
-        script: |
-          [[ ! -z $(docker ps -qf "name=service$") ]] && docker stop $(docker ps -qf "name=service$") || echo "No containers found"
-          docker container prune -f
-    
     - name: Deploy services
       uses: appleboy/ssh-action@master
       with:
@@ -87,6 +76,8 @@ jobs:
         username: ${{ secrets.DGOC_SSH_USER }}
         script_stop: true
         script: |
+            [[ ! -z $(docker ps -qf "name=service$") ]] && docker stop $(docker ps -qf "name=service$") || echo "No containers found"
+            docker container prune -f
             cd /pipeline/subscription-system
             docker compose up --build -d
             cd ..
