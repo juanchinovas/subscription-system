@@ -76,9 +76,9 @@ jobs:
         username: ${{ secrets.DGOC_SSH_USER }}
         script_stop: true
         script: |
-          docker stop $(docker ps -qf "name=service$")
+          [[ ! -z $(docker ps -qf "name=service$") ]] && docker stop $(docker ps -qf "name=service$") || echo "No containers found"
           docker container prune -f
-          docker rmi $(docker images "*-service" -q) 
+          [[ ! -z $(docker images "*-service" -q) ]] && docker rmi $(docker images "*-service" -q)  || echo "No images found"
     
     - name: Deploy services
       uses: appleboy/ssh-action@master
