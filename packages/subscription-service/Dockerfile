@@ -20,13 +20,6 @@ COPY ./ ./
 # Install dependencies
 RUN yarn install
 
-# Build application including libraries.
-RUN yarn workspace @internal/common build
-RUN yarn workspace subscription-service build
-
-# Create yaml config file for the docker container 
-RUN node scripts/create-config-file-dkr.js subscription-service docker
-
 # Need to only copy the prod dependencies
 RUN rm -r node_modules
 

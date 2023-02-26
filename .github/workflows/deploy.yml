@@ -1,7 +1,7 @@
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "test_deploy" ]
   workflow_dispatch:
 
 env:
@@ -47,6 +47,10 @@ jobs:
         envkey_MQ_PASSWORD: '${{ secrets.MQ_PASSWORD }}'
         envkey_CACHE_TTL: '${{ secrets.CACHE_TTL }}'
         envkey_DEPLOY_SHA1: '${{ github.sha }}'
+    
+
+    - name: "Generating configurations file"
+      run: yarn pre:docker
 
     - name: Uploading files
       uses: cross-the-world/ssh-scp-ssh-pipelines@latest
