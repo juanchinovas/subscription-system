@@ -1,7 +1,7 @@
 
 on:
   push:
-    branches: [ "test_deploy" ]
+    branches: [ "main" ]
   workflow_dispatch:
 
 env:
